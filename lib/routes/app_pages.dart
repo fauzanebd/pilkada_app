@@ -8,6 +8,8 @@ import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.d
 import 'package:pilkada_app/modules/main/main.dart';
 import 'package:pilkada_app/modules/splash/splash_binding.dart';
 import 'package:pilkada_app/modules/splash/splash_screen.dart';
+import 'package:pilkada_app/modules/visi_misi/visi_misi_screen.dart';
+import 'package:pilkada_app/modules/visi_misi/visi_misi_binding.dart';
 
 part 'app_routes.dart';
 
@@ -42,6 +44,12 @@ class AppPages {
           name: Routes.DATA_CONFIRMATION,
           page: () => DataConfirmationScreen(),
           binding: DataConfirmationBinding(),
+          transition: Transition.cupertinoDialog,
+        ),
+        GetPage(
+          name: Routes.VISI_MISI, 
+          page: () => VisiMisiScreen(),
+          binding: VisiMisiBinding(),
           transition: Transition.cupertinoDialog,
         )
       ],

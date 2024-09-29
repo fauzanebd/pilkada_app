@@ -6,6 +6,7 @@ import 'package:pilkada_app/models/response/error_response.dart';
 import 'package:pilkada_app/models/response/login_response.dart';
 import 'package:pilkada_app/models/response/save_data_response.dart';
 import 'package:pilkada_app/models/response/upload_image_response.dart';
+import 'package:pilkada_app/models/response/visi_misi_response.dart';
 import 'package:pilkada_app/shared/utils/exceptions.dart';
 import 'api.dart';
 
@@ -79,6 +80,20 @@ class ApiRepository {
     switch (res.statusCode) {
       case 200:
         return SaveDataResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<VisiMisiResponse> getVisiMisi(String token) async {
+    final res = await apiProvider.getVisiMisi('/visi-misi', token);
+    switch (res.statusCode) {
+      case 200:
+        return VisiMisiResponse.fromJson(res.body);
       case null: //null statusCode happen when theres no internet connection
         throw NetworkException(
             'Connection timed out. Check your internet connection',

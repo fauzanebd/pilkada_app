@@ -28,4 +28,11 @@ class ApiProvider extends BaseProvider {
     return post(path, data.toJson(),
         headers: {'Authorization': 'Bearer $token'});
   }
+
+  Future<Response> getVisiMisi(String path, String token) {
+    return get(
+      path, 
+      headers: {'Authorization': 'Bearer $token'}
+    );
+  }
 }

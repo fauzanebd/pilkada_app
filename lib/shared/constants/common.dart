@@ -24,6 +24,7 @@ abstract class CommonConstants {
     fontSize: normalText,
     fontWeight: FontWeight.w600,
     fontFamily: 'Figtree',
+    color: ColorConstants.black,
   );
   static const TextStyle kSmallText = TextStyle(
     fontSize: smallText,
@@ -154,6 +155,8 @@ abstract class CommonConstants {
   // Settings Screen Builder ids
   static const String kDeleteAccountDialogBuilderId =
       'DeleteAccountDialogBuilderId';
+
+  static const String kVisiMisiBuilderId = 'VisiMisiBuilderId';
 }
 
 extension Target on Object {

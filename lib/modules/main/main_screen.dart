@@ -52,7 +52,9 @@ class MainScreen extends GetView<MainController> {
               crossAxisCount: 3,
               children: [
                 _buildMenuItem(Icons.list_alt, 'Daftar Data'),
-                _buildMenuItem(Icons.emoji_events, 'Visi & Misi'),
+                _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
+                  controller.navigateToPage('Visi & Misi');
+                }),
                 _buildMenuItem(Icons.group, 'Anggota'),
                 _buildMenuItem(Icons.person, 'Profil'),
                 _buildMenuItem(Icons.people, 'DPT'),
@@ -70,13 +72,17 @@ class MainScreen extends GetView<MainController> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String label) {
+  Widget _buildMenuItem(IconData icon, String label, {Function()? onTap}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Material(
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              if (onTap != null) {
+                onTap();
+              }
+            },
             child: Ink(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(

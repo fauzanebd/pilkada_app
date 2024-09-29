@@ -6,6 +6,7 @@ abstract class Routes {
   static const REGISTER = '/register';
   static const MAIN = '/main';
   static const DATA_CONFIRMATION = '/data-confirmation';
+  static const VISI_MISI = '/visi-misi';
 
   static const SPLASH = '/';
 
