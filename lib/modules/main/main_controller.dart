@@ -10,6 +10,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/banner.dart';
+import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/user.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
@@ -56,7 +57,6 @@ class MainController extends GetxController {
     token = mainArgs?.token;
     currentUser = User.fromString(currentUserString!);
   }
-
 
   Future<bool> _cameraAccessAllowed() async {
     if (Platform.isAndroid) {
@@ -106,14 +106,36 @@ class MainController extends GetxController {
   Future<void> _uploadImage(File image) async {
     isUploadImageModalLoading.value = true;
     try {
-      uploadImageResponse = await apiRepository.uploadImage(
-        image.path,
-        image.path.split('/').last,
-        userId: currentUser!.id,
-        token: token!,
+      // uploadImageResponse = await apiRepository.uploadImage(
+      //   image.path,
+      //   image.path.split('/').last,
+      //   userId: currentUser!.id,
+      //   token: token!,
+      // );
+
+      //mock
+      uploadImageResponse = UploadImageResponse(
+        data: DataPemilih(
+          name: 'Agus Sujono',
+          nik: '233454504',
+          address: 'Jl. Kebon Jeruk',
+          birthDate: '2023-08-01',
+          gender: 'L',
+          noPhone: '0812345678',
+          noTps: '0943',
+          isPartyMember: true,
+          category: 'category',
+          expectationToCandidate: 'wahahaha',
+          positioningToCandidate: 'struick',
+          relationToCandidate: 'krisfk',
+        ),
+        error: false,
+        message: 'message',
       );
-      Get.toNamed(Routes.MAIN + Routes.DATA_CONFIRMATION,
-          arguments: DataConfirmationArgs(token!, uploadImageResponse!));
+      Get.toNamed(
+        Routes.MAIN + Routes.DATA_CONFIRMATION,
+        arguments: DataConfirmationArgs(token!, uploadImageResponse!),
+      );
     } catch (e) {
       isUploadImageModalLoading.value = false;
       CommonWidget.toast('Upload image failed: $e');

@@ -31,7 +31,7 @@ class BigPrimaryButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: isLoading
                   ? ColorConstants.primaryAccentColor.withAlpha(150)
-                  : const Color.fromARGB(255, 8, 9, 44),
+                  : ColorConstants.primaryAccentColor,
               boxShadow: [
                 CommonConstants.widgetShadowStyle,
               ],

@@ -41,10 +41,8 @@ abstract class CommonConstants {
   static const String tncUrl = '';
   static const String privacyPolicy =
       'https://api.smartsoft.co.id/gelael-privacy-policy';
-  static const String defaultPromoImage =
-      '${ApiConstants.baseUrl}/api/images/promo_default.png';
   static const String imageNetworkPlaceholder =
-      '${ApiConstants.baseUrl}/api/images/placeholder.png';
+      'https://untirta.ac.id/wp-content/uploads/2023/08/placeholder-4.png';
   static const String defaultTitle = 'No Title';
   static const String defaultDescription = 'No Description';
   static const String assetImagePlaceholder = 'assets/pngs/placeholder.png';
@@ -52,6 +50,10 @@ abstract class CommonConstants {
   static const String kGelaelTiktok = 'gelaelsupermarket';
 
   static const double strukFontSize = 12;
+
+  // pilkada app
+
+  static const String kDatePickerBuilder = 'DatePickerBuilder';
 
   // Main Tab Builder ids
   static const String kMainTabsBuilderId = 'MainTabsBuilderId';

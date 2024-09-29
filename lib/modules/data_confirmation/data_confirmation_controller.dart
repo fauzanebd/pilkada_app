@@ -18,6 +18,21 @@ class DataConfirmationController extends GetxController {
 
   Rx<DataPemilih?> dataPemilih = Rx<DataPemilih?>(null);
 
+  // Form
+  final GlobalKey<FormState> dataConfirmationFormKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final nikController = TextEditingController();
+  final addressController = TextEditingController();
+  final birthDateController = TextEditingController();
+  final genderController = TextEditingController();
+  final noPhoneController = TextEditingController();
+  final noTpsController = TextEditingController();
+  final isPartyMemberController = TextEditingController();
+  final categoryController = TextEditingController();
+  final expectationToCandidateController = TextEditingController();
+  final positioningToCandidateController = TextEditingController();
+  final relationToCandidateController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
@@ -25,6 +40,39 @@ class DataConfirmationController extends GetxController {
     s3FileName = uploadImageResponse!.data.s3File ?? '';
     token = args.token;
     dataPemilih.value = uploadImageResponse!.data;
+
+    nameController.text = dataPemilih.value!.name!;
+    nikController.text = dataPemilih.value!.nik!;
+    addressController.text = dataPemilih.value!.address!;
+    birthDateController.text = dataPemilih.value!.birthDate!;
+    genderController.text = dataPemilih.value!.gender!;
+    noPhoneController.text = dataPemilih.value!.noPhone!;
+    noTpsController.text = dataPemilih.value!.noTps!;
+    isPartyMemberController.text = dataPemilih.value!.isPartyMember!.toString();
+    categoryController.text = dataPemilih.value!.category!;
+    expectationToCandidateController.text =
+        dataPemilih.value!.expectationToCandidate!;
+    positioningToCandidateController.text =
+        dataPemilih.value!.positioningToCandidate!;
+    relationToCandidateController.text =
+        dataPemilih.value!.relationToCandidate!;
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    nameController.dispose();
+    nikController.dispose();
+    addressController.dispose();
+    birthDateController.dispose();
+    genderController.dispose();
+    noPhoneController.dispose();
+    noTpsController.dispose();
+    isPartyMemberController.dispose();
+    categoryController.dispose();
+    expectationToCandidateController.dispose();
+    positioningToCandidateController.dispose();
+    relationToCandidateController.dispose();
   }
 
   Future<void> saveData() async {
