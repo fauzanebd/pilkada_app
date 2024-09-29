@@ -15,6 +15,7 @@ import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/user.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/modules/main/widgets/pick_photo_dialog_content.dart';
+import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
@@ -215,13 +216,17 @@ class MainController extends GetxController {
     );
   }
 
-  void navigateToPage(String page) {
+  Future<void> navigateToPage(String page) async {
     switch (page) {
       case 'Daftar Data':
         // Navigate to Daftar Data page
         break;
       case 'Visi & Misi':
         // Navigate to Visi & Misi page
+        Get.toNamed(
+          Routes.MAIN + Routes.VISI_MISI, 
+          arguments: VisiMisiArgs(token!),
+        );
         break;
       case 'Anggota':
         // Navigate to Anggota page

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pilkada_app/shared/constants/constants.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:pilkada_app/shared/constants/colors.dart';
 
 class CustomPopScreen extends StatelessWidget {
   const CustomPopScreen(
@@ -16,12 +16,8 @@ class CustomPopScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorConstants.primaryAccentColor,
-        title: Text(
-          appBarTitle!,
-          style: TextStyle(
-              color: appBarTitleColor ?? ColorConstants.secondaryTextColor),
-        ),
+        title: Text(appBarTitle!,
+            style: TextStyle(color: appBarTitleColor ?? ColorConstants.black)),
         leading: Skeleton.keep(
           child: GestureDetector(
             onTap: () {
@@ -29,7 +25,7 @@ class CustomPopScreen extends StatelessWidget {
             },
             child: Icon(
               CupertinoIcons.back,
-              color: appBarTitleColor ?? ColorConstants.secondaryTextColor,
+              color: appBarTitleColor ?? ColorConstants.black,
               size: 30,
             ),
           ),
