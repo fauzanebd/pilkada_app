@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:pilkada_app/modules/main/main_controller.dart';
+import 'package:pilkada_app/modules/main/widgets/worm_image_carousel.dart';
+import 'package:pilkada_app/shared/constants/colors.dart';
+import 'package:pilkada_app/shared/constants/common.dart';
+
+class MainScreen extends GetView<MainController> {
+  const MainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).viewPadding.top,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+              vertical: 10.w,
+            ),
+            child: SizedBox(
+              width: 40.w,
+              height: 40.w,
+              child: Image.asset(
+                'assets/pngs/smartsoft-logo.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          GetBuilder<MainController>(
+            id: CommonConstants.kImageCarouselBuilderId,
+            builder: (ctrl) {
+              return WormImageCarousel(
+                carouselItems: ctrl.carouselItems.value,
+                isSkeletonEnabled: ctrl.carouselItemsLoading.value,
+                controller: controller,
+                autoPlayDelay: controller.appConf.sliderInterval,
+              );
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+              vertical: 10.w,
+            ),
+            child: GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              children: [
+                _buildMenuItem(Icons.list_alt, 'Daftar Data'),
+                _buildMenuItem(Icons.emoji_events, 'Visi & Misi'),
+                _buildMenuItem(Icons.group, 'Anggota'),
+                _buildMenuItem(Icons.person, 'Profil'),
+                _buildMenuItem(Icons.people, 'DPT'),
+                _buildMenuItem(Icons.exit_to_app, 'Keluar'),
+              ],
+            ),
+          )
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(bottom: 20.h),
+        child: _buildCustomFAB(context),
+      ),
+    );
+  }
+
+  Widget _buildMenuItem(IconData icon, String label) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Material(
+          child: InkWell(
+            onTap: () {},
+            child: Ink(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: ColorConstants.primaryAccentColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: Colors.white, size: 50.w),
+            ),
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: CommonConstants.kNormalText.copyWith(
+            fontSize: 14.sp,
+            color: ColorConstants.accentTextColor,
+          ),
+        ),
+      ],
+    );
+  }
+  
+
+  Widget _buildCustomFAB(BuildContext context) {
+    return controller.currentUser?.role == 'admin'
+        ? SizedBox(
+            width: 70.w, // Increased size to accommodate shadow
+            height: 70.w, // Increased size to accommodate shadow
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  // Add functionality for the custom FAB
+                  controller.onAddDataTap();
+                },
+                customBorder: const CircleBorder(),
+                child: Ink(
+                  decoration: const BoxDecoration(
+                    color: ColorConstants.primaryAccentColor,
+                    shape: BoxShape.circle,
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.black.withOpacity(0.3),
+                    //     spreadRadius: 1,
+                    //     blurRadius: 5,
+                    //     offset: Offset(0, 2),
+                    //   ),
+                    // ],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 30.w,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        : const SizedBox();
+  }
+}
