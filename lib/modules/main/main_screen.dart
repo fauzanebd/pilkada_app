@@ -64,13 +64,17 @@ class MainScreen extends GetView<MainController> {
                   _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
                     controller.navigateToPage('Visi & Misi');
                   }),
-                  _buildMenuItem(Icons.group, 'Anggota', onTap: () {
-                    controller.navigateToPage('Anggota');
-                  }),
+                  controller.currentUser?.isEnumerator ?? false
+                      ? _buildMenuItem(Icons.group, 'Anggota', onTap: () {
+                          controller.navigateToPage('Anggota');
+                        })
+                      : const SizedBox(),
                   _buildMenuItem(Icons.person, 'Profil', onTap: () {
                     controller.navigateToPage('Profil');
                   }),
-                  _buildMenuItem(Icons.people, 'DPT'),
+                  controller.currentUser?.isEnumerator ?? false
+                      ? _buildMenuItem(Icons.people, 'DPT')
+                      : const SizedBox(),
                   _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
                     controller.navigateToPage('Keluar');
                   }),

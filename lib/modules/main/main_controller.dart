@@ -204,6 +204,7 @@ class MainController extends GetxController {
           child: Container(
             color: const Color.fromRGBO(0, 0, 0, 0.001),
             child: PickPhotoDialogContent(
+              isEnumerator: currentUser?.isEnumerator ?? false,
               onCancelDialog: () => Navigator.of(context).pop(),
               onTakePhoto: () async {
                 // Implement camera functionality here
