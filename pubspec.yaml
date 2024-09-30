@@ -55,6 +55,7 @@ dependencies:
   image_cropper: ^8.0.2
   modal_bottom_sheet: ^3.0.0
   flutter_markdown: ^0.7.3+2
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/pngs/smartsoft-logo.png"
 
 # The following section is specific to Flutter packages.
 flutter:
