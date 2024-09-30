@@ -11,71 +11,79 @@ class MainScreen extends GetView<MainController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).viewPadding.top,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: CommonConstants.kDefaultHorizontalPadding.w,
-              vertical: 10.w,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, res) {
+        if (didPop) {
+          return;
+        }
+      },
+      child: Scaffold(
+        body: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).viewPadding.top,
             ),
-            child: SizedBox(
-              width: 40.w,
-              height: 40.w,
-              child: Image.asset(
-                'assets/pngs/smartsoft-logo.png',
-                fit: BoxFit.contain,
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+                vertical: 10.w,
+              ),
+              child: SizedBox(
+                width: 40.w,
+                height: 40.w,
+                child: Image.asset(
+                  'assets/pngs/smartsoft-logo.png',
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          GetBuilder<MainController>(
-            id: CommonConstants.kImageCarouselBuilderId,
-            builder: (ctrl) {
-              return WormImageCarousel(
-                carouselItems: ctrl.carouselItems.value,
-                isSkeletonEnabled: ctrl.carouselItemsLoading.value,
-                controller: controller,
-                autoPlayDelay: controller.appConf.sliderInterval,
-              );
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: CommonConstants.kDefaultHorizontalPadding.w,
-              vertical: 10.w,
+            GetBuilder<MainController>(
+              id: CommonConstants.kImageCarouselBuilderId,
+              builder: (ctrl) {
+                return WormImageCarousel(
+                  carouselItems: ctrl.carouselItems.value,
+                  isSkeletonEnabled: ctrl.carouselItemsLoading.value,
+                  controller: controller,
+                  autoPlayDelay: controller.appConf.sliderInterval,
+                );
+              },
             ),
-            child: GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 3,
-              children: [
-                _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
-                  controller.navigateToPage('Daftar Data');
-                }),
-                _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
-                  controller.navigateToPage('Visi & Misi');
-                }),
-                _buildMenuItem(Icons.group, 'Anggota', onTap: () {
-                  controller.navigateToPage('Anggota');
-                }),
-                _buildMenuItem(Icons.person, 'Profil', onTap: () {
-                  controller.navigateToPage('Profil');
-                }),
-                _buildMenuItem(Icons.people, 'DPT'),
-                _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
-                  controller.navigateToPage('Keluar');
-                }),
-              ],
-            ),
-          )
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: 20.h),
-        child: _buildCustomFAB(context),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+                vertical: 10.w,
+              ),
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 3,
+                children: [
+                  _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
+                    controller.navigateToPage('Daftar Data');
+                  }),
+                  _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
+                    controller.navigateToPage('Visi & Misi');
+                  }),
+                  _buildMenuItem(Icons.group, 'Anggota', onTap: () {
+                    controller.navigateToPage('Anggota');
+                  }),
+                  _buildMenuItem(Icons.person, 'Profil', onTap: () {
+                    controller.navigateToPage('Profil');
+                  }),
+                  _buildMenuItem(Icons.people, 'DPT'),
+                  _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
+                    controller.navigateToPage('Keluar');
+                  }),
+                ],
+              ),
+            )
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: 20.h),
+          child: _buildCustomFAB(context),
+        ),
       ),
     );
   }
