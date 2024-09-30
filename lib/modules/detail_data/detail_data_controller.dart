@@ -3,21 +3,20 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
-import 'package:pilkada_app/models/response/save_data_response.dart';
-import 'package:pilkada_app/models/response/upload_image_response.dart';
+import 'package:pilkada_app/modules/daftar_data/daftar_data_controller.dart';
 
-class DataConfirmationController extends GetxController {
+class DetailDataController extends GetxController {
   final ApiRepository apiRepository;
-  DataConfirmationController({required this.apiRepository});
+  DetailDataController({required this.apiRepository});
 
-  DataConfirmationArgs args = Get.arguments as DataConfirmationArgs;
-  UploadImageResponse? uploadImageResponse;
+  DetailDataArgs args = Get.arguments as DetailDataArgs;
+
+  DataPemilih? dataPemilih;
+
   String? token;
   late String s3FileName;
 
   RxBool isLoading = false.obs;
-
-  DataPemilih? dataPemilih;
 
   List<String> gender = const ['L', 'P'];
 
@@ -43,7 +42,7 @@ class DataConfirmationController extends GetxController {
   ];
 
   // Form
-  final GlobalKey<FormState> dataConfirmationFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> detailDataKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final nikController = TextEditingController();
   final addressController = TextEditingController();
@@ -61,18 +60,26 @@ class DataConfirmationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    uploadImageResponse = args.uploadImageResponse;
-    s3FileName = uploadImageResponse!.data.s3File ?? '';
+
+    dataPemilih = args.dataPemilih;
+    s3FileName = dataPemilih!.s3File ?? '';
     token = args.token;
-    dataPemilih = uploadImageResponse!.data;
 
     nameController.text = dataPemilih!.name ?? '';
     nikController.text = dataPemilih!.nik ?? '';
     addressController.text = dataPemilih!.address ?? '';
     birthDateController.text = dataPemilih!.birthDate ?? '';
-    genderController.text = dataPemilih!.gender ?? gender[0];
-    isPartyMemberController.text =
-        dataPemilih!.isPartyMember?.toString() ?? "false";
+    genderController.text = dataPemilih!.gender ?? '';
+    noPhoneController.text = dataPemilih!.noPhone ?? '';
+    noTpsController.text = dataPemilih!.noTps ?? '';
+    isPartyMemberController.text = dataPemilih!.isPartyMember?.toString() ?? '';
+    categoryController.text = dataPemilih!.category ?? '';
+    confirmationStatusController.text = dataPemilih!.confirmationStatus ?? '';
+    expectationToCandidateController.text =
+        dataPemilih!.expectationToCandidate ?? '';
+    positioningToCandidateController.text =
+        dataPemilih!.positioningToCandidate ?? '';
+    relationToCandidateController.text = dataPemilih!.relationToCandidate ?? '';
   }
 
   @override
@@ -87,15 +94,15 @@ class DataConfirmationController extends GetxController {
     noTpsController.dispose();
     isPartyMemberController.dispose();
     categoryController.dispose();
-    confirmationStatusController.dispose();
     expectationToCandidateController.dispose();
     positioningToCandidateController.dispose();
     relationToCandidateController.dispose();
+    confirmationStatusController.dispose();
   }
 
-  Future<void> saveData() async {
+  Future<void> updateData() async {
     isLoading.value = true;
-    SaveDataResponse? res;
+    String? res;
     try {
       dataPemilih!.name = nameController.text;
       dataPemilih!.nik = nikController.text;
@@ -105,6 +112,7 @@ class DataConfirmationController extends GetxController {
       } else {
         dataPemilih!.birthDate = null;
       }
+
       dataPemilih!.gender = genderController.text;
       dataPemilih!.noPhone = noPhoneController.text;
       dataPemilih!.noTps = noTpsController.text;
@@ -117,30 +125,32 @@ class DataConfirmationController extends GetxController {
           positioningToCandidateController.text;
       dataPemilih!.relationToCandidate = relationToCandidateController.text;
 
-      EasyLoading.show(status: 'Saving data...');
-
-      res = await apiRepository.saveData(dataPemilih!, token!);
+      EasyLoading.show(status: 'Updating data...');
+      res = await apiRepository.updateData(dataPemilih!, token!);
       isLoading.value = false;
       if (res != null) {
-        EasyLoading.dismiss();
+        Get.find<DaftarDataController>().updateDataItem(dataPemilih!);
         ScaffoldMessenger.of(Get.context!).showSnackBar(
-          const SnackBar(content: Text('Data saved successfully. Thank you!')),
+          SnackBar(content: Text('$res. Thank you!')),
         );
+        EasyLoading.dismiss();
         Get.back();
       }
     } catch (e) {
       EasyLoading.dismiss();
       isLoading.value = false;
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(content: Text('Failed to save data. Please try again.')),
+        const SnackBar(
+            content: Text('Failed to update data. Please try again.')),
       );
       Get.back();
     }
+    // }
   }
 }
 
-class DataConfirmationArgs {
+class DetailDataArgs {
   final String token;
-  final UploadImageResponse uploadImageResponse;
-  DataConfirmationArgs(this.token, this.uploadImageResponse);
+  final DataPemilih dataPemilih;
+  DetailDataArgs(this.token, this.dataPemilih);
 }

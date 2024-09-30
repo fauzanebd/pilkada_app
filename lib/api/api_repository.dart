@@ -2,9 +2,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/request/login_request.dart';
+import 'package:pilkada_app/models/response/anggota.dart';
+import 'package:pilkada_app/models/response/daftar_data_pemilih_response.dart';
 import 'package:pilkada_app/models/response/error_response.dart';
+import 'package:pilkada_app/models/response/list_anggota_response.dart';
 import 'package:pilkada_app/models/response/login_response.dart';
 import 'package:pilkada_app/models/response/save_data_response.dart';
+import 'package:pilkada_app/models/response/update_data_response.dart';
 import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/response/visi_misi_response.dart';
 import 'package:pilkada_app/shared/utils/exceptions.dart';
@@ -29,8 +33,8 @@ class ApiRepository {
     }
   }
 
-  Future<LoginResponse?> login(LoginRequest data) async {
-    final res = await apiProvider.login('/login', data);
+  Future<LoginResponse?> login(LoginRequest data, {String? clientCode}) async {
+    final res = await apiProvider.login('/login?client_code=$clientCode', data);
     switch (res.statusCode) {
       case 200:
         return LoginResponse.fromJson(res.body);
@@ -51,9 +55,11 @@ class ApiRepository {
   }
 
   Future<UploadImageResponse?> uploadImage(String imagePath, String filename,
-      {required int userId, required String token}) async {
+      {required int userId,
+      required String token,
+      required String clientCode}) async {
     final res = await apiProvider.uploadImage(
-      '/data-pemilih/upload',
+      '/data-pemilih/upload?client_code=$clientCode',
       token: token,
       imagePath: imagePath,
       filename: filename,
@@ -74,9 +80,10 @@ class ApiRepository {
     }
   }
 
-  Future<SaveDataResponse?> saveData(DataPemilih data, String token) async {
-    final res =
-        await apiProvider.saveData('/data-pemilih/save_data', data, token);
+  Future<SaveDataResponse?> saveData(DataPemilih data, String token,
+      {String? clientCode}) async {
+    final res = await apiProvider.saveData(
+        '/data-pemilih/save_data?client_code=$clientCode', data, token);
     switch (res.statusCode) {
       case 200:
         return SaveDataResponse.fromJson(res.body);
@@ -89,11 +96,62 @@ class ApiRepository {
     }
   }
 
-  Future<VisiMisiResponse> getVisiMisi(String token) async {
-    final res = await apiProvider.getVisiMisi('/visi-misi', token);
+  Future<String?> updateData(DataPemilih data, String token,
+      {String? clientCode}) async {
+    final res = await apiProvider.saveData(
+        '/data-pemilih/update_data?client_code=$clientCode', data, token);
+    switch (res.statusCode) {
+      case 200:
+        return UpdateDataResponse.fromJson(res.body).message;
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<VisiMisiResponse> getVisiMisi(String token,
+      {String? clientCode}) async {
+    final res = await apiProvider.getVisiMisi(
+        '/visi-misi?client_code=$clientCode', token);
     switch (res.statusCode) {
       case 200:
         return VisiMisiResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<DaftarDataPemilihResponse> fetchDaftarDataPemilih(
+      String token, int limit, int page,
+      {String? clientCode}) async {
+    final res = await apiProvider.fetchDaftarDataPemilih(
+        '/data-pemilih?limit=$limit&page=$page&client_code=$clientCode', token);
+    switch (res.statusCode) {
+      case 200:
+        return DaftarDataPemilihResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<ListAnggotaResponse> fetchAnggota(String token, int limit, int page,
+      {String? clientCode}) async {
+    final res = await apiProvider.fetchAnggota(
+        '/users/get-subordinate?client_code=$clientCode', token);
+    switch (res.statusCode) {
+      case 200:
+        return ListAnggotaResponse.fromJson(res.body);
       case null: //null statusCode happen when theres no internet connection
         throw NetworkException(
             'Connection timed out. Check your internet connection',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ColorConstants {
   static const Color appScaffoldBackgroundColor = Color(0xFFFFFFFF);
+  static const Color secondaryBackgroundColor = Color(0xFFF6F6F6);
   static const Color primaryAccentColor = Color(0xFF282A64);
   static const Color secondaryDarkAppColor = Color(0xFF323232);
   static const Color greyedOutText = Color(0xFFB0B8C1);

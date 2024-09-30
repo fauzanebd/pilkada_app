@@ -29,7 +29,9 @@ DataPemilih _$DataPemilihFromJson(Map<String, dynamic> json) => DataPemilih(
       userId: (json['user_id'] as num?)?.toInt(),
       villageCode: json['village_code'] as String?,
       wardCode: json['ward_code'] as String?,
-    );
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
+    )..id = (json['id'] as num?)?.toInt();
 
 Map<String, dynamic> _$DataPemilihToJson(DataPemilih instance) =>
     <String, dynamic>{
@@ -53,6 +55,9 @@ Map<String, dynamic> _$DataPemilihToJson(DataPemilih instance) =>
       's3_file': instance.s3File,
       'subdistrict_code': instance.subdistrictCode,
       'user_id': instance.userId,
+      'id': instance.id,
       'village_code': instance.villageCode,
       'ward_code': instance.wardCode,
+      'created_at': instance.createdAt,
+      'updated_at': instance.updatedAt,
     };

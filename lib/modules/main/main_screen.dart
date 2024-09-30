@@ -51,14 +51,22 @@ class MainScreen extends GetView<MainController> {
               shrinkWrap: true,
               crossAxisCount: 3,
               children: [
-                _buildMenuItem(Icons.list_alt, 'Daftar Data'),
+                _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
+                  controller.navigateToPage('Daftar Data');
+                }),
                 _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
                   controller.navigateToPage('Visi & Misi');
                 }),
-                _buildMenuItem(Icons.group, 'Anggota'),
-                _buildMenuItem(Icons.person, 'Profil'),
+                _buildMenuItem(Icons.group, 'Anggota', onTap: () {
+                  controller.navigateToPage('Anggota');
+                }),
+                _buildMenuItem(Icons.person, 'Profil', onTap: () {
+                  controller.navigateToPage('Profil');
+                }),
                 _buildMenuItem(Icons.people, 'DPT'),
-                _buildMenuItem(Icons.exit_to_app, 'Keluar'),
+                _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
+                  controller.navigateToPage('Keluar');
+                }),
               ],
             ),
           )
@@ -105,7 +113,6 @@ class MainScreen extends GetView<MainController> {
       ],
     );
   }
-  
 
   Widget _buildCustomFAB(BuildContext context) {
     return controller.currentUser?.role == 'admin'

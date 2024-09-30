@@ -97,14 +97,13 @@ class AuthInputFieldWithNoLabel extends StatelessWidget {
           minHeight: 60.h,
         ),
         suffixIcon: password
-            ? IconButton(
-                disabledColor: ColorConstants.white,
-                color: ColorConstants.primaryAccentColor,
-                icon: const Icon(
+            ? InkWell(
+                splashFactory: NoSplash.splashFactory,
+                child: const Icon(
                   Icons.remove_red_eye,
                   color: ColorConstants.primaryAccentColor,
                 ),
-                onPressed: onPasswordEyePressed,
+                onTap: onPasswordEyePressed,
               )
             : null,
       ),

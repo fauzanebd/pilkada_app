@@ -7,6 +7,10 @@ abstract class Routes {
   static const MAIN = '/main';
   static const DATA_CONFIRMATION = '/data-confirmation';
   static const VISI_MISI = '/visi-misi';
+  static const DAFTAR_DATA = '/daftar-data';
+  static const DETAIL_DATA = '/detail-data';
+  static const DAFTAR_ANGGOTA = '/daftar-anggota';
+  static const PROFILE = '/profile';
 
   static const SPLASH = '/';
 

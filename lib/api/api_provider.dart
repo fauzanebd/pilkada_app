@@ -29,10 +29,20 @@ class ApiProvider extends BaseProvider {
         headers: {'Authorization': 'Bearer $token'});
   }
 
+  Future<Response> updateData(String path, DataPemilih data, String token) {
+    return post(path, data.toJson(),
+        headers: {'Authorization': 'Bearer $token'});
+  }
+
   Future<Response> getVisiMisi(String path, String token) {
-    return get(
-      path, 
-      headers: {'Authorization': 'Bearer $token'}
-    );
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> fetchDaftarDataPemilih(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> fetchAnggota(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
   }
 }

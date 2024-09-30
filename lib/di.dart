@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pilkada_app/lang/translation_service.dart';
 import 'package:pilkada_app/lifecycle_controller.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,7 @@ class DependencyInjection {
   static Future<void> init() async {
     await Get.putAsync(() => StorageService().init());
     Get.put(LifeCycleController());
-    // await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: ".env");
     await initializeDateFormatting(TranslationService.locale.toString());
   }
 }

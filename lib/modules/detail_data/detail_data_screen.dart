@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
+import 'package:pilkada_app/modules/detail_data/detail_data_controller.dart';
+import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
 import 'package:pilkada_app/shared/widgets/big_primary_button.dart';
@@ -10,17 +12,28 @@ import 'package:pilkada_app/shared/widgets/form_boolean_dropdown.dart';
 import 'package:pilkada_app/shared/widgets/form_dropdown.dart';
 import 'package:pilkada_app/shared/widgets/form_text_field.dart';
 
-class DataConfirmationScreen extends GetView<DataConfirmationController> {
-  const DataConfirmationScreen({super.key});
+class DetailDataScreen extends GetView<DetailDataController> {
+  const DetailDataScreen({super.key});
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   debugPrint('building data detail screen');
+  //   return Center(
+  //       child: ElevatedButton(
+  //     onPressed: controller.back,
+  //     child: const Text('Back'),
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('building data detail screen');
     return CustomPopScreen(
-      appBarTitle: 'Confirm Data',
+      appBarTitle: 'Detail Data',
       body: Stack(
         children: [
           Form(
-            key: controller.dataConfirmationFormKey,
+            key: controller.detailDataKey,
             child: Padding(
               padding: EdgeInsets.only(
                 left: CommonConstants.kDefaultHorizontalPadding.w,
@@ -145,7 +158,7 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                     'Save Data',
                     isLoading: false,
                     height: 50.0.h,
-                    onTap: controller.saveData,
+                    onTap: controller.updateData,
                   ),
                 ),
               ),
@@ -175,10 +188,10 @@ class FormDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DataConfirmationController>(
+    return GetBuilder<DetailDataController>(
         id: CommonConstants.kDatePickerBuilder,
         builder: (getxController) {
-          return GetBuilder<DataConfirmationController>(
+          return GetBuilder<DetailDataController>(
               id: CommonConstants.kDatePickerBuilder,
               builder: (getxController) {
                 return FormTextField(
@@ -192,7 +205,6 @@ class FormDatePicker extends StatelessWidget {
                     } catch (e) {
                       parsedDateTime = DateTime.now();
                     }
-
                     final DateTime? picked = await showDatePicker(
                       context: context,
                       initialDate: parsedDateTime,

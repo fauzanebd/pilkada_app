@@ -115,11 +115,10 @@ void configLoading() {
     // ..indicatorSize = 45.0
     ..radius = 10.0
     // ..progressColor = Colors.yellow
-    ..backgroundColor =
-        ColorConstants.appScaffoldBackgroundColor.withOpacity(0.5)
+    ..backgroundColor = ColorConstants.appScaffoldBackgroundColor
     ..indicatorColor = ColorConstants.primaryAccentColor
     ..textColor = ColorConstants.primaryAccentColor
-    // ..maskColor = Colors.red
+    ..maskColor = Colors.white
     ..userInteractions = false
     ..dismissOnTap = false
     ..animationStyle = EasyLoadingAnimationStyle.scale;

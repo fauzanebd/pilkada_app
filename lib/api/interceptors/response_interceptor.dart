@@ -16,6 +16,6 @@ FutureOr<dynamic> responseInterceptor(
 }
 
 void responseLogger(Response response) {
-  debugPrint('Status Code: ${response.statusCode}\n');
-  debugPrint('Data: ${response.bodyString?.toString() ?? ''}');
+  debugPrint('Response Status Code: ${response.statusCode}\n');
+  debugPrint('Response Data: ${response.bodyString?.toString() ?? ''}');
 }

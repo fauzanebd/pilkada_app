@@ -10,7 +10,8 @@ VisiMisi _$VisiMisiFromJson(Map<String, dynamic> json) => VisiMisi(
       id: (json['id'] as num?)?.toInt(),
       clientCode: json['client_code'] as String?,
       text: json['text'] as String?,
-    )..image = json['image'] as String?;
+      image: json['image'] as String?,
+    );
 
 Map<String, dynamic> _$VisiMisiToJson(VisiMisi instance) => <String, dynamic>{
       'id': instance.id,

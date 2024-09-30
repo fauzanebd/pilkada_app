@@ -56,6 +56,9 @@ abstract class CommonConstants {
 
   static const String kDatePickerBuilder = 'DatePickerBuilder';
 
+  static const String kDaftarDataBuilderId = 'DaftarDataBuilderId';
+  static const String kDaftarAnggotaBuilderId = 'DaftarAnggotaBuilderId';
+
   // Main Tab Builder ids
   static const String kMainTabsBuilderId = 'MainTabsBuilderId';
 

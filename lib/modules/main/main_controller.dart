@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -15,10 +16,12 @@ import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/user.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/modules/main/widgets/pick_photo_dialog_content.dart';
+import 'package:pilkada_app/modules/profile/profile_controller.dart';
 import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
+import 'package:pilkada_app/shared/utils/auth.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
 
 import '../../models/response/appconf_response.dart';
@@ -107,32 +110,34 @@ class MainController extends GetxController {
   Future<void> _uploadImage(File image) async {
     isUploadImageModalLoading.value = true;
     try {
-      // uploadImageResponse = await apiRepository.uploadImage(
-      //   image.path,
-      //   image.path.split('/').last,
-      //   userId: currentUser!.id,
-      //   token: token!,
-      // );
+      uploadImageResponse = await apiRepository.uploadImage(
+        image.path,
+        image.path.split('/').last,
+        userId: currentUser!.id,
+        token: token!,
+        clientCode: dotenv.get('CLIENT_CODE'),
+      );
 
       //mock
-      uploadImageResponse = UploadImageResponse(
-        data: DataPemilih(
-          name: 'Agus Sujono',
-          nik: '233454504',
-          address: 'Jl. Kebon Jeruk',
-          birthDate: '2023-08-01',
-          gender: 'L',
-          noPhone: '0812345678',
-          noTps: '0943',
-          isPartyMember: true,
-          category: 'category',
-          expectationToCandidate: 'wahahaha',
-          positioningToCandidate: 'struick',
-          relationToCandidate: 'krisfk',
-        ),
-        error: false,
-        message: 'message',
-      );
+      // uploadImageResponse = UploadImageResponse(
+      //   data: DataPemilih(
+      //     name: 'Agus Sujono',
+      //     nik: '233454504',
+      //     address: 'Jl. Kebon Jeruk',
+      //     birthDate: '2023-08-01',
+      //     gender: 'L',
+      //     noPhone: '0812345678',
+      //     noTps: '0943',
+      //     isPartyMember: true,
+      //     category: 'category',
+      //     expectationToCandidate: 'wahahaha',
+      //     positioningToCandidate: 'struick',
+      //     relationToCandidate: 'krisfk',
+      //   ),
+
+      // error: false,
+      // message: 'message',
+      // );
       Get.toNamed(
         Routes.MAIN + Routes.DATA_CONFIRMATION,
         arguments: DataConfirmationArgs(token!, uploadImageResponse!),
@@ -177,6 +182,7 @@ class MainController extends GetxController {
           EasyLoading.show(
               status: 'Uploading image...',
               maskType: EasyLoadingMaskType.black);
+          debugPrint('uploading image');
           await _uploadImage(File(croppedFile.path));
           EasyLoading.dismiss();
         }
@@ -188,8 +194,6 @@ class MainController extends GetxController {
   }
 
   void onAddDataTap() {
-    final ImagePicker picker = ImagePicker();
-
     showModalBottomSheet(
       context: Get.context!,
       backgroundColor: Colors.transparent,
@@ -220,25 +224,38 @@ class MainController extends GetxController {
     switch (page) {
       case 'Daftar Data':
         // Navigate to Daftar Data page
+        Get.toNamed(
+          Routes.MAIN + Routes.DAFTAR_DATA,
+          arguments: token!,
+        );
         break;
       case 'Visi & Misi':
         // Navigate to Visi & Misi page
         Get.toNamed(
-          Routes.MAIN + Routes.VISI_MISI, 
+          Routes.MAIN + Routes.VISI_MISI,
           arguments: VisiMisiArgs(token!),
         );
         break;
       case 'Anggota':
         // Navigate to Anggota page
+        Get.toNamed(
+          Routes.MAIN + Routes.DAFTAR_ANGGOTA,
+          arguments: token!,
+        );
         break;
       case 'Profil':
         // Navigate to Profil page
+        Get.toNamed(
+          Routes.MAIN + Routes.PROFILE,
+          arguments: ProfileArgs(token: token!, user: currentUser!),
+        );
         break;
       case 'DPT':
         // Navigate to DPT page
         break;
       case 'Keluar':
         // Implement logout functionality
+        AuthUtils.logOut();
         break;
     }
   }
