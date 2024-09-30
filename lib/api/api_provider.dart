@@ -13,15 +13,36 @@ class ApiProvider extends BaseProvider {
     return post(path, data.toJson());
   }
 
-  Future<Response> uploadImage(String path,
-      {required String token,
-      required String imagePath,
-      required String filename}) {
-    final FormData formData = FormData({
-      'image': MultipartFile(File(imagePath), filename: filename),
+  Future<Response<dynamic>> uploadImage(
+    String path, {
+    required String token,
+    required String imagePath,
+    required String filename,
+  }) async {
+    final file = File(imagePath);
+    if (!await file.exists()) {
+      throw Exception('File does not exist');
+    }
+  
+    final formData = FormData({
+      'image': MultipartFile(file, filename: filename),
     });
-
-    return post(path, formData, headers: {'Authorization': 'Bearer $token'});
+  
+    try {
+      final response = await GetConnect().post(
+        '${ApiConstants.baseUrl}$path',
+        formData,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+  
+      if (response.status.hasError) {
+        throw Exception('Failed to upload image: ${response.statusText}');
+      }
+  
+      return response;
+    } catch (e) {
+      throw Exception('Error uploading image: $e');
+    }
   }
 
   Future<Response> saveData(String path, DataPemilih data, String token) {
