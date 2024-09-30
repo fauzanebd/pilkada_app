@@ -10,11 +10,13 @@ class PickPhotoDialogContent extends StatelessWidget {
     this.onCancelDialog,
     this.onTakePhoto,
     this.onChooseFromGallery,
+    required this.isEnumerator,
   });
 
   final void Function()? onCancelDialog;
   final void Function()? onTakePhoto;
   final void Function()? onChooseFromGallery;
+  final bool isEnumerator;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +43,13 @@ class PickPhotoDialogContent extends StatelessWidget {
                   color: ColorConstants.appScaffoldBackgroundColor,
                   thickness: 1,
                 ),
-                DialogChoice(
-                  choiceTitle: "Choose from Gallery",
-                  onChoiceTap: onChooseFromGallery,
-                  choiceIcon: CupertinoIcons.photo_on_rectangle,
-                ),
+                isEnumerator
+                    ? DialogChoice(
+                        choiceTitle: "Choose from Gallery",
+                        onChoiceTap: onChooseFromGallery,
+                        choiceIcon: CupertinoIcons.photo_on_rectangle,
+                      )
+                    : const SizedBox(),
                 const Divider(
                   color: ColorConstants.appScaffoldBackgroundColor,
                   thickness: 1,
