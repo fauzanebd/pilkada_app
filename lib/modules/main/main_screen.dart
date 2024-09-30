@@ -49,38 +49,40 @@ class MainScreen extends GetView<MainController> {
                 );
               },
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: CommonConstants.kDefaultHorizontalPadding.w,
-                vertical: 10.w,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+                  vertical: 10.w,
+                ),
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1, // Ensures square cells
+                  children: [
+                    _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
+                      controller.navigateToPage('Daftar Data');
+                    }),
+                    _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
+                      controller.navigateToPage('Visi & Misi');
+                    }),
+                    if (controller.currentUser != null && !(controller.currentUser!.isEnumerator ?? false))
+                      _buildMenuItem(Icons.group, 'Anggota', onTap: () {
+                        controller.navigateToPage('Anggota');
+                      }),
+                    _buildMenuItem(Icons.person, 'Profil', onTap: () {
+                      controller.navigateToPage('Profil');
+                    }),
+                    if (controller.currentUser != null && !(controller.currentUser!.isEnumerator ?? false))
+                      _buildMenuItem(Icons.people, 'DPT', onTap: () {
+                        controller.navigateToPage('DPT');
+                      }),
+                    _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
+                      controller.navigateToPage('Keluar');
+                    }),
+                  ],
+                ),
               ),
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 3,
-                children: [
-                  _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
-                    controller.navigateToPage('Daftar Data');
-                  }),
-                  _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
-                    controller.navigateToPage('Visi & Misi');
-                  }),
-                  controller.currentUser?.isEnumerator ?? false
-                      ? _buildMenuItem(Icons.group, 'Anggota', onTap: () {
-                          controller.navigateToPage('Anggota');
-                        })
-                      : const SizedBox(),
-                  _buildMenuItem(Icons.person, 'Profil', onTap: () {
-                    controller.navigateToPage('Profil');
-                  }),
-                  controller.currentUser?.isEnumerator ?? false
-                      ? _buildMenuItem(Icons.people, 'DPT')
-                      : const SizedBox(),
-                  _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
-                    controller.navigateToPage('Keluar');
-                  }),
-                ],
-              ),
-            )
+            ),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -127,8 +129,7 @@ class MainScreen extends GetView<MainController> {
   }
 
   Widget _buildCustomFAB(BuildContext context) {
-    return controller.currentUser?.role == 'admin'
-        ? SizedBox(
+    return SizedBox(
             width: 70.w, // Increased size to accommodate shadow
             height: 70.w, // Increased size to accommodate shadow
             child: Material(
@@ -162,7 +163,6 @@ class MainScreen extends GetView<MainController> {
                 ),
               ),
             ),
-          )
-        : const SizedBox();
+          );
   }
 }

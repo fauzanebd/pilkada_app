@@ -35,7 +35,7 @@ class PickPhotoDialogContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 DialogChoice(
-                  choiceTitle: "Take Photo",
+                  choiceTitle: "Ambil foto",
                   onChoiceTap: onTakePhoto,
                   choiceIcon: CupertinoIcons.photo_camera,
                 ),
@@ -45,7 +45,7 @@ class PickPhotoDialogContent extends StatelessWidget {
                 ),
                 isEnumerator
                     ? DialogChoice(
-                        choiceTitle: "Choose from Gallery",
+                        choiceTitle: "Ambil dari galeri",
                         onChoiceTap: onChooseFromGallery,
                         choiceIcon: CupertinoIcons.photo_on_rectangle,
                       )

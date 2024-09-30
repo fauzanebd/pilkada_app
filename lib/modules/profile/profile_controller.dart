@@ -158,6 +158,7 @@ class ProfileController extends GetxController {
           child: Container(
             color: const Color.fromRGBO(0, 0, 0, 0.001),
             child: PickPhotoDialogContent(
+              isEnumerator: false,
               onCancelDialog: () => Navigator.of(context).pop(),
               onTakePhoto: () async {
                 // Implement camera functionality here
@@ -176,6 +177,7 @@ class ProfileController extends GetxController {
     Get.generalDialog(
       pageBuilder: (buildContext, animation, secondaryAnimation) {
         return PickPhotoDialogContent(
+          isEnumerator: false,
           onCancelDialog: () => Get.back(),
           onTakePhoto: () async {
             final XFile? image = await picker.pickImage(
