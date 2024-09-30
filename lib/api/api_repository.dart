@@ -130,9 +130,14 @@ class ApiRepository {
 
   Future<DaftarDataPemilihResponse> fetchDaftarDataPemilih(
       String token, int limit, int page,
-      {String? clientCode}) async {
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null) {
+      qargs = "&q=$query";
+    }
     final res = await apiProvider.fetchDaftarDataPemilih(
-        '/data-pemilih?limit=$limit&page=$page&client_code=$clientCode', token);
+        '/data-pemilih?limit=$limit&page=$page&client_code=$clientCode$qargs',
+        token);
     switch (res.statusCode) {
       case 200:
         return DaftarDataPemilihResponse.fromJson(res.body);
