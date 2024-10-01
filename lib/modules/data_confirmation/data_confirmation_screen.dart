@@ -242,7 +242,7 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
+              child: Text(
                 'Batal simpan data',
                 style: TextStyle(
                   color: ColorConstants.white,
@@ -256,8 +256,10 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                 controller.saveData();
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'Ya, tetap simpan data',
+              child: Text(
+                dptCheckRes.isValidDpt
+                    ? 'Lanjut simpan data'
+                    : 'Ya, tetap simpan data',
                 style: TextStyle(
                   color: ColorConstants.white,
                 ),

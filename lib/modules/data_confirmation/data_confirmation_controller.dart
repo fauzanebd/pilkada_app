@@ -324,17 +324,20 @@ class DataConfirmationController extends GetxController {
   Future<void> saveData() async {
     isLoading.value = true;
     SaveDataResponse? res;
+    bool isDPTVerified = false;
+    int? dptId;
+    String? nameFromDPTCheck;
+    String? addressFromDPTCheck;
+    String? tpsNumberFromDPTCheck;
     try {
-      String? nameFromDPTCheck;
-      String? addressFromDPTCheck;
-      String? tpsNumberFromDPTCheck;
-
       if (dptCheckResponse != null &&
           dptCheckResponse!.isValidDpt &&
           dptCheckResponse!.potentialDpt.isNotEmpty) {
         nameFromDPTCheck = dptCheckResponse!.potentialDpt[0].name;
         addressFromDPTCheck = dptCheckResponse!.potentialDpt[0].address;
         tpsNumberFromDPTCheck = dptCheckResponse!.potentialDpt[0].tpsNo;
+        isDPTVerified = true;
+        dptId = dptCheckResponse!.potentialDpt[0].id;
       }
 
       if (nameFromDPTCheck != null) {
@@ -411,6 +414,9 @@ class DataConfirmationController extends GetxController {
             Get.context!, 'Silahkan pilih Kelurahan terlebih dahulu');
         return;
       }
+
+      dataPemilih!.isVerified = isDPTVerified;
+      dataPemilih!.dptId = dptId;
 
       EasyLoading.show(status: 'Saving data...');
 

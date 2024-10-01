@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +20,26 @@ class CommonWidget {
     } else {
       return value.toStringAsFixed(3);
     }
+  }
+
+  static String dateFormatter(String dateString) {
+    // The dateString should be in this format:
+    // "Tue, 01 Oct 2024 10:08:42 GMT";
+
+    // Parse the input string
+    DateTime dateTime = HttpDate.parse(dateString);
+
+    // Convert to WIB (Western Indonesian Time, UTC+7)
+    DateTime wibDateTime = dateTime.add(Duration(hours: 7));
+
+    // Format the date in Indonesian
+    String formattedDate =
+        DateFormat('EEE, d MMM yyyy', 'id_ID').format(wibDateTime);
+
+    // Format the time in 24-hour format
+    String formattedTime = DateFormat('HH:mm:ss').format(wibDateTime);
+
+    return '$formattedDate, $formattedTime WIB';
   }
 
   static NumberFormat currencyFormatter = NumberFormat.currency(

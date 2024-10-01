@@ -34,6 +34,8 @@ DataPemilih _$DataPemilihFromJson(Map<String, dynamic> json) => DataPemilih(
       wardCode: json['ward_code'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
+      dptId: (json['dpt_id'] as num?)?.toInt(),
+      isVerified: json['is_verified'] as bool? ?? false,
     )
       ..id = (json['id'] as num?)?.toInt()
       ..villageName = json['village_name'] as String?
@@ -71,4 +73,6 @@ Map<String, dynamic> _$DataPemilihToJson(DataPemilih instance) =>
       'ward_name': instance.wardName,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
+      'dpt_id': instance.dptId,
+      'is_verified': instance.isVerified,
     };

@@ -6,6 +6,7 @@ import 'package:pilkada_app/modules/daftar_data/daftar_data_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
+import 'package:pilkada_app/shared/utils/common_widget.dart';
 
 class DaftarDataScreen extends StatelessWidget {
   const DaftarDataScreen({super.key});
@@ -76,89 +77,132 @@ class DaftarDataScreen extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: Row(
+                                  child: Column(
                                     children: [
-                                      SizedBox(
-                                        width: 12.0.w,
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 12.0.w,
+                                          ),
+                                          Expanded(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                controller.navigateToDetailData(
+                                                    index);
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                  bottom: 8.0,
+                                                  right: 16.0,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      (entry.name != null &&
+                                                              entry.name!
+                                                                  .isNotEmpty)
+                                                          ? entry.name!
+                                                          : '-',
+                                                      style: CommonConstants
+                                                          .kNormalText
+                                                          .copyWith(
+                                                        color: ColorConstants
+                                                            .accentTextColor,
+                                                        fontSize: 18.sp,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Text(
+                                                      entry.nik ?? '',
+                                                      style: CommonConstants
+                                                          .kNormalText
+                                                          .copyWith(
+                                                        color: Colors.black,
+                                                        fontSize: 16.sp,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      // entry.createdAt ?? '',
+                                                      "Diunggah ${entry.createdAt != null ? CommonWidget.dateFormatter(entry.createdAt!) : ''}",
+                                                      style: CommonConstants
+                                                          .kNormalText
+                                                          .copyWith(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                        fontSize: 12.sp,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () =>
+                                                _showDeleteConfirmation(
+                                                    context, controller, index),
+                                            child: SizedBox(
+                                              child: Icon(
+                                                CupertinoIcons.delete,
+                                                size: 20.sp,
+                                                color: ColorConstants.red,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 20.0.w,
+                                          ),
+                                          // IconButton(
+                                          //   icon: Icon(Icons.delete,
+                                          //       color: Colors.red),
+                                          //   onPressed: () =>
+                                          //       _showDeleteConfirmation(
+                                          //           context, controller, index),
+                                          // ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            controller
-                                                .navigateToDetailData(index);
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 8.0,
-                                              bottom: 8.0,
-                                              right: 16.0,
-                                            ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  (entry.name != null &&
-                                                          entry
-                                                              .name!.isNotEmpty)
-                                                      ? entry.name!
-                                                      : '-',
-                                                  style: CommonConstants
-                                                      .kNormalText
-                                                      .copyWith(
-                                                    color: ColorConstants
-                                                        .accentTextColor,
-                                                    fontSize: 18.sp,
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                      Container(
+                                        color: entry.isVerified
+                                            ? ColorConstants.green
+                                            : ColorConstants.red,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 30.0.h,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.0.w,
+                                          ),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                entry.isVerified
+                                                    ? Icons.check_circle
+                                                    : Icons.cancel_outlined,
+                                                color: ColorConstants.white,
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Text(
+                                                entry.isVerified
+                                                    ? 'Telah Terverifikasi di DPT'
+                                                    : 'Belum terverifikasi di DPT',
+                                                style: CommonConstants
+                                                    .kNormalText
+                                                    .copyWith(
+                                                  color: Colors.white,
+                                                  fontSize: 14.sp,
                                                 ),
-                                                Text(
-                                                  entry.nik ?? '',
-                                                  style: CommonConstants
-                                                      .kNormalText
-                                                      .copyWith(
-                                                    color: Colors.black,
-                                                    fontSize: 16.sp,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  entry.createdAt ?? '',
-                                                  style: CommonConstants
-                                                      .kNormalText
-                                                      .copyWith(
-                                                    color: Colors.black
-                                                        .withOpacity(0.5),
-                                                    fontSize: 12.sp,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        onTap: () => _showDeleteConfirmation(
-                                            context, controller, index),
-                                        child: SizedBox(
-                                          child: Icon(
-                                            CupertinoIcons.delete,
-                                            size: 20.sp,
-                                            color: ColorConstants.red,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 20.0.w,
-                                      ),
-                                      // IconButton(
-                                      //   icon: Icon(Icons.delete,
-                                      //       color: Colors.red),
-                                      //   onPressed: () =>
-                                      //       _showDeleteConfirmation(
-                                      //           context, controller, index),
-                                      // ),
                                     ],
                                   ),
                                 ),

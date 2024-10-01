@@ -119,7 +119,6 @@ class ApiRepository {
         if (err.message.contains('exists')) {
           throw DuplicateDataException(err.message);
         }
-
       case null: //null statusCode happen when theres no internet connection
         throw NetworkException(
             'Connection timed out. Check your internet connection',

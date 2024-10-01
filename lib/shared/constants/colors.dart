@@ -14,8 +14,8 @@ class ColorConstants {
   static const Color inactiveDark = Color(0xFF6B7785);
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color red = Color(0xFFFF2E2E);
-  static const Color green = Color(0xFF2EE700);
+  static const Color red = Color(0xFFA02334);
+  static const Color green = Color(0xFF00712D);
   // static const Color blue =  Color(0xFF007AFF);
   static const Color blue = Color(0xFF58A6FF);
   static const Color darkBlue = Color(0xFF2C80FF);

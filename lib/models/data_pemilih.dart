@@ -94,6 +94,12 @@ class DataPemilih {
   @JsonKey(name: 'updated_at')
   String? updatedAt;
 
+  @JsonKey(name: 'dpt_id')
+  int? dptId;
+
+  @JsonKey(name: 'is_verified')
+  bool isVerified;
+
   DataPemilih({
     this.address,
     this.birthDate,
@@ -122,6 +128,8 @@ class DataPemilih {
     this.wardCode,
     this.createdAt,
     this.updatedAt,
+    this.dptId,
+    this.isVerified = false,
   });
 
   factory DataPemilih.fromJson(Map<String, dynamic> json) =>
