@@ -48,7 +48,7 @@ class CandidateProfileScreen extends StatelessWidget {
                           topRight: Radius.circular(20),
                         ),
                         child: CachedNetworkImage(
-                          imageUrl: 'https://placehold.co/600x400',
+                          imageUrl: controller.candidateProfile.image ?? 'https://placehold.co/600x400',
                           fit: BoxFit.fill,
                           placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) => Container(
