@@ -68,6 +68,21 @@ class CommonWidget {
             ),
           );
 
+  static void snackbar(BuildContext context, String textcontent,
+      {Color? backgroundColor, Color? textColor}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: backgroundColor ?? ColorConstants.primaryAccentColor,
+        content: Text(
+          textcontent,
+          style: CommonConstants.kSnackbarText.copyWith(
+            color: textColor ?? ColorConstants.secondaryTextColor,
+          ),
+        ),
+      ),
+    );
+  }
+
   static void toast(String error, {bool long = true}) async {
     Fluttertoast.showToast(
       msg: error,

@@ -158,24 +158,11 @@ class DaftarDataController extends GetxController {
           dataPemilih[indexOnScreen].id ?? 0, token);
       if (res != null) {
         deleteDataItem(indexOnScreen);
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Data berhasil dihapus',
-              style: CommonConstants.kSnackbarText,
-            ),
-          ),
-        );
+        CommonWidget.snackbar(Get.context!, 'Data berhasil dihapus');
       }
     } catch (e) {
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Gagal menghapus data. Silahkan coba lagi beberapa saat. Detail error: $e',
-            style: CommonConstants.kSnackbarText,
-          ),
-        ),
-      );
+      CommonWidget.snackbar(Get.context!,
+          'Gagal menghapus data. Silahkan coba lagi beberapa saat. Detail error: $e');
     } finally {
       EasyLoading.dismiss();
     }

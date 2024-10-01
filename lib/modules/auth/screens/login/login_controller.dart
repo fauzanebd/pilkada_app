@@ -96,13 +96,13 @@ class LoginController extends GetxController {
         CommonWidget.toast('Username atau password salah');
       } on NetworkException {
         dismissLoginLoading();
-        CommonWidget.toast('login_network_error'.tr);
+        CommonWidget.toast('Gagal login. coba periksa jaringan anda');
       } on LoginException catch (e) {
         dismissLoginLoading();
-        CommonWidget.toast('${'login_failed'.tr}: ${e.message}');
+        CommonWidget.toast('${'Gagal login'}: ${e.message}');
       } catch (e) {
         dismissLoginLoading();
-        CommonWidget.toast('${'login_failed'.tr}: $e');
+        CommonWidget.toast('${'Gagal login'}: $e');
       }
     }
   }

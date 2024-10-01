@@ -317,39 +317,22 @@ class DataConfirmationController extends GetxController {
       isLoading.value = false;
       if (res != null) {
         EasyLoading.dismiss();
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Data telah berhasil disimpan.',
-              style: CommonConstants.kSnackbarText,
-            ),
-          ),
-        );
+        CommonWidget.snackbar(Get.context!, 'Data telah berhasil disimpan.');
         Get.back();
       }
     } on DuplicateDataException {
       EasyLoading.dismiss();
       isLoading.value = false;
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Data dengan NIK ${dataPemilih!.nik} sudah ada. Silahkan pilih data lain.',
-            style: CommonConstants.kSnackbarText,
-          ),
-        ),
+      CommonWidget.snackbar(
+        Get.context!,
+        'Data dengan NIK ${dataPemilih!.nik} sudah ada. Silahkan pilih data lain.',
       );
       Get.back();
     } catch (e) {
       EasyLoading.dismiss();
       isLoading.value = false;
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Gagal menyimpan data. Silahkan coba lagi beberapa saat.',
-            style: CommonConstants.kSnackbarText,
-          ),
-        ),
-      );
+      CommonWidget.snackbar(Get.context!,
+          'Gagal menyimpan data. Silahkan coba lagi beberapa saat.');
       Get.back();
     }
   }

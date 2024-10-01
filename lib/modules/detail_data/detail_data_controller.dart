@@ -311,28 +311,15 @@ class DetailDataController extends GetxController {
       isLoading.value = false;
       if (res != null) {
         Get.find<DaftarDataController>().updateDataItem(dataPemilih!);
-        ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Data berhasil diperbaharui',
-              style: CommonConstants.kSnackbarText,
-            ),
-          ),
-        );
+        CommonWidget.snackbar(Get.context!, 'Data berhasil diperbaharui');
         EasyLoading.dismiss();
         Get.back();
       }
     } catch (e) {
       EasyLoading.dismiss();
       isLoading.value = false;
-      ScaffoldMessenger.of(Get.context!).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Gagal memperbaharui data. Silahkan coba lagi beberapa saat.',
-            style: CommonConstants.kSnackbarText,
-          ),
-        ),
-      );
+      CommonWidget.snackbar(Get.context!,
+          'Gagal memperbaharui data. Silahkan coba lagi beberapa saat.');
       Get.back();
     }
   }
