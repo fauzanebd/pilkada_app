@@ -7,11 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/banner.dart';
-import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/user.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
@@ -19,7 +17,6 @@ import 'package:pilkada_app/modules/main/widgets/pick_photo_dialog_content.dart'
 import 'package:pilkada_app/modules/profile/profile_controller.dart';
 import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
-import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/auth.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
@@ -164,8 +161,12 @@ class MainController extends GetxController {
         }
       }
     } else {
-      const SnackBar(
-          content: Text('App does not have permission to access camera.'));
+      SnackBar(
+        content: Text(
+          'App does not have permission to access camera.',
+          style: CommonConstants.kSnackbarText,
+        ),
+      );
     }
   }
 
@@ -187,8 +188,12 @@ class MainController extends GetxController {
         }
       }
     } else {
-      const SnackBar(
-          content: Text('Aplikasi tidak diizinkan mengakses galeri.'));
+      SnackBar(
+        content: Text(
+          'Aplikasi tidak diizinkan mengakses galeri.',
+          style: CommonConstants.kSnackbarText,
+        ),
+      );
     }
   }
 

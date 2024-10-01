@@ -172,11 +172,11 @@ class DetailDataController extends GetxController {
     if (dataPemilih!.wardCode != null) {
       selectedWard = Ward(
         code: dataPemilih!.wardCode!,
-        name: dataPemilih!.wardName!,
+        name: dataPemilih!.wardName ?? '',
         subdistrictCode: dataPemilih!.subdistrictCode!,
       );
     }
-    wardController.text = 'Pilih Desa';
+    wardController.text = 'Pilih Kelurahan';
 
     provincesPickerScrollController.addListener(_provincesPickerScrollListener);
     citiesPickerScrollController.addListener(_citiesPickerScrollListener);
@@ -312,7 +312,12 @@ class DetailDataController extends GetxController {
       if (res != null) {
         Get.find<DaftarDataController>().updateDataItem(dataPemilih!);
         ScaffoldMessenger.of(Get.context!).showSnackBar(
-          SnackBar(content: Text('$res. Thank you!')),
+          SnackBar(
+            content: Text(
+              'Data berhasil diperbaharui',
+              style: CommonConstants.kSnackbarText,
+            ),
+          ),
         );
         EasyLoading.dismiss();
         Get.back();
@@ -321,8 +326,12 @@ class DetailDataController extends GetxController {
       EasyLoading.dismiss();
       isLoading.value = false;
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(
-            content: Text('Failed to update data. Please try again.')),
+        SnackBar(
+          content: Text(
+            'Gagal memperbaharui data. Silahkan coba lagi beberapa saat.',
+            style: CommonConstants.kSnackbarText,
+          ),
+        ),
       );
       Get.back();
     }

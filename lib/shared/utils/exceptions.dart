@@ -39,3 +39,8 @@ class HealthCheckException implements Exception {
   final String message;
   HealthCheckException(this.message);
 }
+
+class DuplicateDataException implements Exception {
+  final String message;
+  DuplicateDataException(this.message);
+}

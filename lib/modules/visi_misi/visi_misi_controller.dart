@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:get/get.dart';
 import 'package:pilkada_app/models/response/visi_misi_response.dart';

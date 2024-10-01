@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:pilkada_app/api/api.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -15,6 +15,12 @@ abstract class CommonConstants {
   static const double kDefaultPaddingFromAppBar = 20.0;
   static const int kPromoDetailsTitleEstimatedHeightPerLine = 20;
   static const int kVoucherDetailsTitleEstimatedHeightPerLine = 20;
+  static TextStyle kSnackbarText = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'Figtree',
+    color: ColorConstants.white,
+  );
   static const TextStyle kLargeText = TextStyle(
     fontSize: largeText,
     fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,6 @@ class DaftarDataScreen extends StatelessWidget {
                                 ? 60.h
                                 : 0.h,
                           )),
-                      // Space for the search bar
                       Container(
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
@@ -76,51 +76,90 @@ class DaftarDataScreen extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      controller.navigateToDetailData(index);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0,
-                                        vertical: 8.0,
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 12.0.w,
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            (entry.name != null &&
-                                                    entry.name!.isNotEmpty)
-                                                ? entry.name!
-                                                : '-',
-                                            style: CommonConstants.kNormalText
-                                                .copyWith(
-                                              color: ColorConstants
-                                                  .accentTextColor,
-                                              fontSize: 20.sp,
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            controller
+                                                .navigateToDetailData(index);
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                              bottom: 8.0,
+                                              right: 16.0,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  (entry.name != null &&
+                                                          entry
+                                                              .name!.isNotEmpty)
+                                                      ? entry.name!
+                                                      : '-',
+                                                  style: CommonConstants
+                                                      .kNormalText
+                                                      .copyWith(
+                                                    color: ColorConstants
+                                                        .accentTextColor,
+                                                    fontSize: 18.sp,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Text(
+                                                  entry.nik ?? '',
+                                                  style: CommonConstants
+                                                      .kNormalText
+                                                      .copyWith(
+                                                    color: Colors.black,
+                                                    fontSize: 16.sp,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  entry.createdAt ?? '',
+                                                  style: CommonConstants
+                                                      .kNormalText
+                                                      .copyWith(
+                                                    color: Colors.black
+                                                        .withOpacity(0.5),
+                                                    fontSize: 12.sp,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          Text(
-                                            entry.nik ?? '',
-                                            style: CommonConstants.kNormalText
-                                                .copyWith(
-                                              color: Colors.black,
-                                              fontSize: 18.sp,
-                                            ),
-                                          ),
-                                          Text(
-                                            entry.createdAt ?? '',
-                                            style: CommonConstants.kNormalText
-                                                .copyWith(
-                                              color:
-                                                  Colors.black.withOpacity(0.5),
-                                              fontSize: 14.sp,
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                      GestureDetector(
+                                        onTap: () => _showDeleteConfirmation(
+                                            context, controller, index),
+                                        child: SizedBox(
+                                          child: Icon(
+                                            CupertinoIcons.delete,
+                                            size: 20.sp,
+                                            color: ColorConstants.red,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 20.0.w,
+                                      ),
+                                      // IconButton(
+                                      //   icon: Icon(Icons.delete,
+                                      //       color: Colors.red),
+                                      //   onPressed: () =>
+                                      //       _showDeleteConfirmation(
+                                      //           context, controller, index),
+                                      // ),
+                                    ],
                                   ),
                                 ),
                               );
@@ -183,6 +222,78 @@ class DaftarDataScreen extends StatelessWidget {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(
+      BuildContext context, DaftarDataController controller, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ColorConstants.appScaffoldBackgroundColor,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Konfirmasi Hapus',
+                style: CommonConstants.kNormalText.copyWith(
+                  color: ColorConstants.accentTextColor,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: SizedBox(
+                  child: Icon(
+                    CupertinoIcons.xmark,
+                    size: 20.sp,
+                    color: ColorConstants.primaryAccentColor,
+                  ),
+                ),
+              ),
+              // IconButton(
+              //   icon: const Icon(Icons.close),
+              //   onPressed: () => Navigator.of(context).pop(),
+              // ),
+            ],
+          ),
+          content: Text(
+            'Apakah anda yakin untuk menghapus data ${controller.dataPemilih[index].name}?',
+            style: CommonConstants.kNormalText.copyWith(
+              color: ColorConstants.black,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: ColorConstants.red),
+              onPressed: () {
+                Navigator.of(context).pop();
+                controller.deleteData(index);
+              },
+              child: const Text(
+                'Ya, saya yakin',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstants.primaryAccentColor),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Batal Hapus',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

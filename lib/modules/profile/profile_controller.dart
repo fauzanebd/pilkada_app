@@ -117,8 +117,12 @@ class ProfileController extends GetxController {
         }
       }
     } else {
-      const SnackBar(
-          content: Text('App does not have permission to access camera.'));
+      SnackBar(
+        content: Text(
+          'Aplikasi tidak diizinkan mengakses kamera.',
+          style: CommonConstants.kSnackbarText,
+        ),
+      );
     }
   }
 

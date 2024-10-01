@@ -1,8 +1,10 @@
 import 'package:flutter/rendering.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
+
 import 'package:pilkada_app/models/response/meta.dart';
 import 'package:pilkada_app/modules/detail_data/detail_data_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
@@ -114,7 +116,7 @@ class DaftarDataController extends GetxController {
         }
       }
     } catch (e) {
-      CommonWidget.toast('Failed to fetch data: $e');
+      CommonWidget.toast('Gagal mengambil data: $e');
     } finally {
       isLoading.value = false;
       update([CommonConstants.kDaftarDataBuilderId]);
@@ -129,6 +131,11 @@ class DaftarDataController extends GetxController {
     }
   }
 
+  void deleteDataItem(int indexOnScreen) {
+    dataPemilih.removeAt(indexOnScreen);
+    update([CommonConstants.kDaftarDataBuilderId]);
+  }
+
   Future<void> navigateToDetailData(int index) async {
     try {
       Get.toNamed(
@@ -137,6 +144,40 @@ class DaftarDataController extends GetxController {
       );
     } catch (e) {
       CommonWidget.toast('Failed to navigate to detail data page: $e');
+    }
+  }
+
+  Future<void> deleteData(int indexOnScreen) async {
+    EasyLoading.show(status: 'Menghapus data...');
+    try {
+      if (dataPemilih[indexOnScreen].id == null) {
+        CommonWidget.toast('Tidak dapat menghapus data: id tidak ditemukan');
+        return;
+      }
+      final res = await apiRepository.deleteData(
+          dataPemilih[indexOnScreen].id ?? 0, token);
+      if (res != null) {
+        deleteDataItem(indexOnScreen);
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Data berhasil dihapus',
+              style: CommonConstants.kSnackbarText,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Gagal menghapus data. Silahkan coba lagi beberapa saat. Detail error: $e',
+            style: CommonConstants.kSnackbarText,
+          ),
+        ),
+      );
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 

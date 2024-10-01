@@ -16,6 +16,7 @@ import 'package:pilkada_app/models/ward.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
+import 'package:pilkada_app/shared/utils/exceptions.dart';
 
 class DataConfirmationController extends GetxController {
   final ApiRepository apiRepository;
@@ -169,7 +170,7 @@ class DataConfirmationController extends GetxController {
         subdistrictCode: dataPemilih!.subdistrictCode!,
       );
     }
-    wardController.text = 'Pilih Desa';
+    wardController.text = 'Pilih Kelurahan';
 
     provincesPickerScrollController.addListener(_provincesPickerScrollListener);
     citiesPickerScrollController.addListener(_citiesPickerScrollListener);
@@ -281,21 +282,33 @@ class DataConfirmationController extends GetxController {
       if (selectedProvince != null) {
         dataPemilih!.provinceCode = selectedProvince!.code;
         dataPemilih!.provinceName = selectedProvince!.name;
+      } else {
+        CommonWidget.toast('Silahkan pilih Provinsi terlebih dahulu');
+        return;
       }
 
       if (selectedCity != null) {
         dataPemilih!.cityCode = selectedCity!.code;
         dataPemilih!.cityName = selectedCity!.name;
+      } else {
+        CommonWidget.toast('Silahkan pilih Kota terlebih dahulu');
+        return;
       }
 
       if (selectedSubdistrict != null) {
         dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
         dataPemilih!.subdistrictName = selectedSubdistrict!.name;
+      } else {
+        CommonWidget.toast('Silahkan pilih Kecamatan terlebih dahulu');
+        return;
       }
 
       if (selectedWard != null) {
         dataPemilih!.wardCode = selectedWard!.code;
         dataPemilih!.wardName = selectedWard!.name;
+      } else {
+        CommonWidget.toast('Silahkan pilih Kelurahan terlebih dahulu');
+        return;
       }
 
       EasyLoading.show(status: 'Saving data...');
@@ -305,17 +318,37 @@ class DataConfirmationController extends GetxController {
       if (res != null) {
         EasyLoading.dismiss();
         ScaffoldMessenger.of(Get.context!).showSnackBar(
-          const SnackBar(content: Text('Data telah berhasil disimpan.')),
+          SnackBar(
+            content: Text(
+              'Data telah berhasil disimpan.',
+              style: CommonConstants.kSnackbarText,
+            ),
+          ),
         );
         Get.back();
       }
+    } on DuplicateDataException {
+      EasyLoading.dismiss();
+      isLoading.value = false;
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Data dengan NIK ${dataPemilih!.nik} sudah ada. Silahkan pilih data lain.',
+            style: CommonConstants.kSnackbarText,
+          ),
+        ),
+      );
+      Get.back();
     } catch (e) {
       EasyLoading.dismiss();
       isLoading.value = false;
       ScaffoldMessenger.of(Get.context!).showSnackBar(
-        const SnackBar(
-            content: Text(
-                'Gagal menyimpan data. Silahkan coba lagi beberapa saat.')),
+        SnackBar(
+          content: Text(
+            'Gagal menyimpan data. Silahkan coba lagi beberapa saat.',
+            style: CommonConstants.kSnackbarText,
+          ),
+        ),
       );
       Get.back();
     }
