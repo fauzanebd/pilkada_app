@@ -77,6 +77,8 @@ class DetailDataController extends GetxController {
   Rx<Meta?> wardsMeta = Rx<Meta?>(null);
   String wardsSearchQuery = '';
 
+  bool isCheckDPTLoading = false;
+
   Timer? _debounce;
 
   List<String> gender = const ['L', 'P'];
@@ -262,45 +264,53 @@ class DetailDataController extends GetxController {
     }
   }
 
+  bool locationsFieldValidation() {
+    if (selectedProvince != null) {
+      dataPemilih!.provinceCode = selectedProvince!.code;
+      dataPemilih!.provinceName = selectedProvince!.name;
+    } else {
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
+      return false;
+    }
+
+    if (selectedCity != null) {
+      dataPemilih!.cityCode = selectedCity!.code;
+      dataPemilih!.cityName = selectedCity!.name;
+    } else {
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kota terlebih dahulu');
+      return false;
+    }
+
+    if (selectedSubdistrict != null) {
+      dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
+      dataPemilih!.subdistrictName = selectedSubdistrict!.name;
+    } else {
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
+      return false;
+    }
+
+    if (selectedWard != null) {
+      dataPemilih!.wardCode = selectedWard!.code;
+      dataPemilih!.wardName = selectedWard!.name;
+    } else {
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kelurahan terlebih dahulu');
+      return false;
+    }
+    return true;
+  }
+
   Future<DPTCheckResponse?> checkDPT() async {
-    EasyLoading.show(status: 'Menjalankan verifikasi DPT...');
+    isCheckDPTLoading = true;
+    update([CommonConstants.kDetailDataCheckDPTLoaderId]);
+
+    // sleep for 1 seconds
+    await Future.delayed(const Duration(seconds: 1));
+
     try {
-      if (selectedProvince != null) {
-        dataPemilih!.provinceCode = selectedProvince!.code;
-        dataPemilih!.provinceName = selectedProvince!.name;
-      } else {
-        CommonWidget.errorSnackbar(
-            Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
-        return null;
-      }
-
-      if (selectedCity != null) {
-        dataPemilih!.cityCode = selectedCity!.code;
-        dataPemilih!.cityName = selectedCity!.name;
-      } else {
-        CommonWidget.errorSnackbar(
-            Get.context!, 'Silahkan pilih Kota terlebih dahulu');
-        return null;
-      }
-
-      if (selectedSubdistrict != null) {
-        dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
-        dataPemilih!.subdistrictName = selectedSubdistrict!.name;
-      } else {
-        CommonWidget.errorSnackbar(
-            Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
-        return null;
-      }
-
-      if (selectedWard != null) {
-        dataPemilih!.wardCode = selectedWard!.code;
-        dataPemilih!.wardName = selectedWard!.name;
-      } else {
-        CommonWidget.errorSnackbar(
-            Get.context!, 'Silahkan pilih Kelurahan terlebih dahulu');
-        return null;
-      }
-
       final res = await apiRepository.checkDPT(
         data: DPTCheckRequest(
           name: nameController.text,
@@ -319,7 +329,8 @@ class DetailDataController extends GetxController {
       CommonWidget.errorSnackbar(Get.context!, 'Gagal cek DPT: $e');
       return null;
     } finally {
-      EasyLoading.dismiss();
+      isCheckDPTLoading = false;
+      update([CommonConstants.kDetailDataCheckDPTLoaderId]);
       isLoading.value = false;
     }
   }

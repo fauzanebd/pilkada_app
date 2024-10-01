@@ -4,9 +4,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/banner.dart';
@@ -17,6 +19,7 @@ import 'package:pilkada_app/modules/main/widgets/pick_photo_dialog_content.dart'
 import 'package:pilkada_app/modules/profile/profile_controller.dart';
 import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
+import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/auth.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
@@ -32,8 +35,6 @@ class MainController extends GetxController {
 
   String? token;
   User? currentUser;
-
-  RxBool isUploadImageModalLoading = false.obs;
 
   AppConf appConf = AppConf();
 
@@ -120,8 +121,12 @@ class MainController extends GetxController {
   }
 
   Future<void> _uploadImage(File image) async {
-    isUploadImageModalLoading.value = true;
     try {
+      showPictureUploadLoading();
+
+      // sleep for 1 seconds
+      await Future.delayed(const Duration(seconds: 3));
+
       uploadImageResponse = await apiRepository.uploadImage(
         image.path,
         image.path.split('/').last,
@@ -150,14 +155,53 @@ class MainController extends GetxController {
       // error: false,
       // message: 'message',
       // );
+
+      // Hide loading
+      Get.back();
+      // Go to data confirmation screen
       Get.toNamed(
         Routes.MAIN + Routes.DATA_CONFIRMATION,
         arguments: DataConfirmationArgs(token!, uploadImageResponse!),
       );
     } catch (e) {
-      isUploadImageModalLoading.value = false;
+      // Hide loading
+      Get.back();
       CommonWidget.errorSnackbar(Get.context!, 'Upload image failed: $e');
     }
+  }
+
+  void showPictureUploadLoading() {
+    showDialog(
+      context: Get.context!,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ColorConstants.appScaffoldBackgroundColor,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/lotties/image-scanning.json',
+                width: 200.w,
+                height: 120.h,
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Menganalisis gambar...',
+                style: CommonConstants.kNormalText.copyWith(
+                  color: ColorConstants.black,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void launchURL(String url) async {
@@ -184,9 +228,7 @@ class MainController extends GetxController {
         croppedFile = await _cropImage(image);
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
-          EasyLoading.show(status: 'Mengunggah gambar...');
           await _uploadImage(File(croppedFile.path));
-          EasyLoading.dismiss();
         }
       }
     } else {
@@ -209,11 +251,7 @@ class MainController extends GetxController {
         croppedFile = await _cropImage(image);
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
-          EasyLoading.show(
-              status: 'Mengunggah gambar...',
-              maskType: EasyLoadingMaskType.black);
           await _uploadImage(File(croppedFile.path));
-          EasyLoading.dismiss();
         }
       }
     } else {

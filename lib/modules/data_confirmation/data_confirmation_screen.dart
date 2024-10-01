@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pilkada_app/models/response/dpt_check_response.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
-import 'package:pilkada_app/shared/utils/common_widget.dart';
 import 'package:pilkada_app/shared/widgets/big_primary_button.dart';
 import 'package:pilkada_app/shared/widgets/form_boolean_dropdown.dart';
 import 'package:pilkada_app/shared/widgets/form_dropdown.dart';
@@ -175,12 +174,9 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                     height: 50.0.h,
                     // onTap: controller.saveData,
                     onTap: () async {
-                      final res = await controller.checkDPT();
-                      if (res != null) {
-                        showDPTConfirmation(controller, res);
-                      } else {
-                        CommonWidget.errorSnackbar(
-                            Get.context!, 'Gagal cek DPT');
+                      if (controller.locationsFieldValidation()) {
+                        showDPTConfirmation();
+                        await controller.checkDPT();
                       }
                     },
                   ),
@@ -193,77 +189,112 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
     );
   }
 
-  void showDPTConfirmation(
-    DataConfirmationController controller,
-    DPTCheckResponse dptCheckRes,
-  ) {
+  void showDPTConfirmation() {
     showDialog(
       context: Get.context!,
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: ColorConstants.appScaffoldBackgroundColor,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Konfirmasi DPT',
-                style: CommonConstants.kNormalText.copyWith(
-                  color: ColorConstants.accentTextColor,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: SizedBox(
-                  child: Icon(
-                    CupertinoIcons.xmark,
-                    size: 20.sp,
-                    color: ColorConstants.primaryAccentColor,
+        return GetBuilder<DataConfirmationController>(
+          id: CommonConstants.kDataConfirmationCheckDPTLoaderId,
+          builder: (controller) {
+            return AlertDialog(
+              backgroundColor: ColorConstants.appScaffoldBackgroundColor,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Konfirmasi DPT',
+                    style: CommonConstants.kNormalText.copyWith(
+                      color: ColorConstants.accentTextColor,
+                    ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: SizedBox(
+                      child: Icon(
+                        CupertinoIcons.xmark,
+                        size: 20.sp,
+                        color: ColorConstants.primaryAccentColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          content: Text(
-            dptCheckRes.isValidDpt
-                ? 'Data ${controller.nameController.text} valid terdaftar di DPT'
-                : 'Data ${controller.nameController.text} tidak valid terdaftar di DPT.\nTetap simpan data?',
-            style: CommonConstants.kNormalText.copyWith(
-              color: ColorConstants.black,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: ColorConstants.red),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Batal simpan data',
-                style: TextStyle(
-                  color: ColorConstants.white,
-                ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (controller.isCheckDPTLoading)
+                    Lottie.asset(
+                      'assets/lotties/loading-green-lottie.json',
+                      width: 100,
+                      height: 100,
+                    )
+                  else if (controller.dptCheckResponse != null &&
+                      controller.dptCheckResponse!.isValidDpt)
+                    Lottie.asset(
+                      'assets/lotties/checkmark-rounded.json',
+                      width: 100,
+                      height: 100,
+                    )
+                  else
+                    Lottie.asset(
+                      'assets/lotties/cross-red-lottie.json',
+                      width: 100,
+                      height: 100,
+                    ),
+                  SizedBox(height: 16),
+                  Text(
+                    controller.isCheckDPTLoading
+                        ? 'Melakukan verifikasi DPT...'
+                        : controller.dptCheckResponse != null &&
+                                controller.dptCheckResponse!.isValidDpt
+                            ? 'Data ${controller.nameController.text} valid terdaftar di DPT'
+                            : 'Data ${controller.nameController.text} tidak valid terdaftar di DPT.\nTetap simpan data?',
+                    style: CommonConstants.kNormalText.copyWith(
+                      color: ColorConstants.black,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorConstants.primaryAccentColor),
-              onPressed: () {
-                controller.saveData();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                dptCheckRes.isValidDpt
-                    ? 'Lanjut simpan data'
-                    : 'Ya, tetap simpan data',
-                style: TextStyle(
-                  color: ColorConstants.white,
-                ),
-              ),
-            ),
-          ],
+              actions: controller.isCheckDPTLoading
+                  ? []
+                  : [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorConstants.red),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Batal simpan data',
+                          style: TextStyle(
+                            color: ColorConstants.white,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorConstants.primaryAccentColor),
+                        onPressed: () {
+                          controller.saveData();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          controller.dptCheckResponse != null &&
+                                  controller.dptCheckResponse!.isValidDpt
+                              ? 'Lanjut simpan data'
+                              : 'Ya, tetap simpan data',
+                          style: TextStyle(
+                            color: ColorConstants.white,
+                          ),
+                        ),
+                      ),
+                    ],
+            );
+          },
         );
       },
     );

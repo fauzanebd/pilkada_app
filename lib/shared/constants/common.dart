@@ -69,6 +69,11 @@ abstract class CommonConstants {
 
   static const String kDaftarDataBuilderId = 'DaftarDataBuilderId';
   static const String kDaftarAnggotaBuilderId = 'DaftarAnggotaBuilderId';
+  static const String kDetailDataCheckDPTLoaderId =
+      'DetailDataCheckDPTLoaderId';
+  static const String kDataConfirmationCheckDPTLoaderId =
+      'DataConfirmationCheckDPTLoaderId';
+  static const String kUploadImageLoaderId = 'UploadImageLoaderId';
 
   // Main Tab Builder ids
   static const String kMainTabsBuilderId = 'MainTabsBuilderId';
