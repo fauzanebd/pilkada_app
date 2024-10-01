@@ -175,9 +175,13 @@ class ApiRepository {
   }
 
   Future<ListAnggotaResponse> fetchAnggota(String token, int limit, int page,
-      {String? clientCode}) async {
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null && query.isNotEmpty) {
+      qargs = "&q=$query";
+    }
     final res = await apiProvider.fetchAnggota(
-        '/users/get-subordinate?client_code=$clientCode', token);
+        '/users/get-subordinate?client_code=$clientCode$qargs', token);
     switch (res.statusCode) {
       case 200:
         return ListAnggotaResponse.fromJson(res.body);

@@ -19,81 +19,146 @@ class DaftarAnggotaScreen extends StatelessWidget {
           body: RefreshIndicator(
             backgroundColor: ColorConstants.appScaffoldBackgroundColor,
             onRefresh: controller.refreshData,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: CommonConstants.kDefaultHorizontalPadding.w,
-              ),
-              child: ListView.builder(
-                controller: controller.scrollController,
-                itemCount: controller.daftarAnggota.length + 1,
-                itemBuilder: (context, index) {
-                  if (index < controller.daftarAnggota.length) {
-                    final entry = controller.daftarAnggota[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: ColorConstants.primaryAccentColor
-                                  .withOpacity(0.5),
-                              width: 2.0,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+                  ),
+                  child: Column(
+                    children: [
+                      Obx(() => AnimatedContainer(
+                            duration: Duration(
+                                milliseconds: DaftarAnggotaController
+                                    .searchBarAnimationDuration),
+                            height: controller.isSearchBarVisible.value
+                                ? 60.h
+                                : 0.h,
+                          )),
+                      SizedBox(height: 8.h),
+                      Expanded(
+                        child: ListView.builder(
+                          controller: controller.scrollController,
+                          itemCount: controller.daftarAnggota.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index < controller.daftarAnggota.length) {
+                              final entry = controller.daftarAnggota[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: ColorConstants.primaryAccentColor
+                                          .withOpacity(0.5),
+                                      width: 2.0,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      // controller.navigateToDetailData(entry);
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0,
+                                        vertical: 8.0,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            (entry.name.isNotEmpty)
+                                                ? entry.name
+                                                : '-',
+                                            style: CommonConstants.kNormalText
+                                                .copyWith(
+                                              color: ColorConstants
+                                                  .accentTextColor,
+                                              fontSize: 20.sp,
+                                            ),
+                                          ),
+                                          Text(
+                                            entry.noPhone ?? '',
+                                            style: CommonConstants.kNormalText
+                                                .copyWith(
+                                              color: Colors.black,
+                                              fontSize: 18.sp,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Level: ${entry.hierarchy}',
+                                            style: CommonConstants.kNormalText
+                                                .copyWith(
+                                              color:
+                                                  Colors.black.withOpacity(0.5),
+                                              fontSize: 14.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else if (controller.hasMoreData.value) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Obx(() => AnimatedOpacity(
+                        opacity:
+                            controller.isSearchBarVisible.value ? 1.0 : 0.0,
+                        duration: Duration(
+                            milliseconds: DaftarAnggotaController
+                                .searchBarAnimationDuration),
+                        child: AnimatedContainer(
+                          duration: Duration(
+                              milliseconds: DaftarAnggotaController
+                                  .searchBarAnimationDuration),
+                          height:
+                              controller.isSearchBarVisible.value ? 60.h : 0,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  CommonConstants.kDefaultHorizontalPadding.w,
+                              vertical: 8.h,
                             ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: GestureDetector(
-                            onTap: () {
-                              // controller.navigateToDetailData(entry);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 8.0,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    (entry.name.isNotEmpty) ? entry.name : '-',
-                                    style: CommonConstants.kNormalText.copyWith(
-                                      color: ColorConstants.accentTextColor,
-                                      fontSize: 20.sp,
-                                    ),
+                            child: TextField(
+                              focusNode: controller.searchFocusNode,
+                              controller: controller.searchController,
+                              decoration: InputDecoration(
+                                hintText: 'Search...',
+                                prefixIcon: const Icon(Icons.search),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8.0.r),
+                                  borderSide: const BorderSide(
+                                    color: ColorConstants.primaryAccentColor,
                                   ),
-                                  Text(
-                                    entry.noPhone ?? '',
-                                    style: CommonConstants.kNormalText.copyWith(
-                                      color: Colors.black,
-                                      fontSize: 18.sp,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Level: ${entry.hierarchy}',
-                                    style: CommonConstants.kNormalText.copyWith(
-                                      color: Colors.black.withOpacity(0.5),
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  } else if (controller.hasMoreData.value) {
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
+                      )),
+                ),
+              ],
             ),
           ),
         );

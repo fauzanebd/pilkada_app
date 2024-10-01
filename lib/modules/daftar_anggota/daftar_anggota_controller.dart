@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:pilkada_app/api/api_repository.dart';
@@ -21,12 +24,20 @@ class DaftarAnggotaController extends GetxController {
   int currentPage = 1;
   static const int itemsPerPage = 10;
 
+  static const int searchBarAnimationDuration = 150;
+
   final ScrollController scrollController = ScrollController();
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
+  Timer? _debounce;
+  RxString searchQuery = ''.obs;
+  RxBool isSearchBarVisible = true.obs;
 
   @override
   void onInit() {
     super.onInit();
     scrollController.addListener(_scrollListener);
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
@@ -39,16 +50,39 @@ class DaftarAnggotaController extends GetxController {
   void onClose() {
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    searchFocusNode.dispose();
+    _debounce?.cancel();
     super.onClose();
   }
 
   void _scrollListener() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      if (isSearchBarVisible.value) {
+        isSearchBarVisible.value = false;
+      }
+    } else if (scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      if (!isSearchBarVisible.value) {
+        isSearchBarVisible.value = true;
+      }
+    }
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       if (!isLoading.value && hasMoreData.value) {
         fetchDaftarAnggota();
       }
     }
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      searchQuery.value = searchController.text;
+      refreshData();
+    });
   }
 
   Future<void> fetchDaftarAnggota() async {
@@ -59,7 +93,8 @@ class DaftarAnggotaController extends GetxController {
 
     try {
       final newData = await apiRepository
-          .fetchAnggota(token, itemsPerPage, currentPage)
+          .fetchAnggota(token, itemsPerPage, currentPage,
+              query: searchQuery.value)
           .then((value) {
         daftarAnggotaMeta.value = value.meta;
         return value.data;
@@ -76,7 +111,8 @@ class DaftarAnggotaController extends GetxController {
         }
       }
     } catch (e) {
-      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch data: $e');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Gagal mengambil data anggota: $e');
     } finally {
       isLoading.value = false;
       update([CommonConstants.kDaftarAnggotaBuilderId]);
