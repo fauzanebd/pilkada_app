@@ -167,6 +167,13 @@ class MainController extends GetxController {
     }
   }
 
+  void onImageTap(String imagePath) {
+    Get.toNamed(
+      Routes.MAIN + Routes.IMAGE_VIEWER,
+      arguments: imagePath,
+    );
+  }
+
   Future<void> _captureImage() async {
     if (await _cameraAccessAllowed()) {
       final ImagePicker picker = ImagePicker();

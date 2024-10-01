@@ -11,6 +11,7 @@ abstract class Routes {
   static const DETAIL_DATA = '/detail-data';
   static const DAFTAR_ANGGOTA = '/daftar-anggota';
   static const PROFILE = '/profile';
+  static const IMAGE_VIEWER = '/image-viewer';
 
   static const SPLASH = '/';
 

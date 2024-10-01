@@ -63,10 +63,7 @@ class DetailDataScreen extends GetView<DetailDataController> {
                     label: 'Nomor HP/WA',
                     textController: controller.noPhoneController,
                   ),
-                  FormTextField(
-                    label: 'Nomor TPS',
-                    textController: controller.noTpsController,
-                  ),
+
                   FormBooleanDropdown(
                     label: 'Anggota Parpol',
                     value: controller.dataPemilih!.isPartyMember,
@@ -145,6 +142,10 @@ class DetailDataScreen extends GetView<DetailDataController> {
                   FormTextField(
                     label: 'Desa',
                     textController: controller.villageController,
+                  ),
+                  FormTextField(
+                    label: 'Nomor TPS',
+                    textController: controller.noTpsController,
                   ),
                   const SizedBox(height: 10),
                   // ElevatedButton(

@@ -10,6 +10,8 @@ import 'package:pilkada_app/modules/daftar_data/daftar_data_screen.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_binding.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.dart';
 import 'package:pilkada_app/modules/detail_data/detail_data_binding.dart';
+import 'package:pilkada_app/modules/image_viewer/image_viewer_binding.dart';
+import 'package:pilkada_app/modules/image_viewer/image_viewer_screen.dart';
 import 'package:pilkada_app/modules/main/main.dart';
 import 'package:pilkada_app/modules/profile/profile_binding.dart';
 import 'package:pilkada_app/modules/profile/profile_screen.dart';
@@ -49,6 +51,12 @@ class AppPages {
       binding: MainBinding(),
       transition: Transition.cupertinoDialog,
       children: [
+        GetPage(
+          name: Routes.IMAGE_VIEWER,
+          page: () => const ImageViewerScreen(),
+          binding: ImageViewerBinding(),
+          transition: Transition.cupertinoDialog,
+        ),
         GetPage(
           name: Routes.DATA_CONFIRMATION,
           page: () => const DataConfirmationScreen(),

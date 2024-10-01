@@ -17,12 +17,14 @@ class WormImageCarousel extends StatelessWidget {
     required this.controller,
     required this.autoPlayDelay,
     required this.isSkeletonEnabled,
+    this.onImageTap,
   });
 
   final List<CarouselItem> carouselItems;
   final MainController controller;
   final int autoPlayDelay;
   final bool isSkeletonEnabled;
+  final Function(String imagePath)? onImageTap;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,16 @@ class WormImageCarousel extends StatelessWidget {
                 child: Swiper(
                   itemBuilder: (context, index) {
                     if (carouselItems[index].isPng) {
-                      return Image.asset(
-                        carouselItems[index].image!,
-                        fit: BoxFit.fill,
+                      return GestureDetector(
+                        onTap: () {
+                          debugPrint(
+                              'tapped image ${carouselItems[index].image}');
+                          onImageTap?.call(carouselItems[index].image!);
+                        },
+                        child: Image.asset(
+                          carouselItems[index].image!,
+                          fit: BoxFit.fill,
+                        ),
                       );
                     }
                     try {

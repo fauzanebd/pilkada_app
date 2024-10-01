@@ -52,6 +52,7 @@ class MainScreen extends GetView<MainController> {
                   isSkeletonEnabled: false,
                   controller: controller,
                   autoPlayDelay: controller.appConf.sliderInterval,
+                  onImageTap: controller.onImageTap,
                 );
               },
             ),

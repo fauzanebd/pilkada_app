@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/response/dpt_check_response.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
@@ -65,10 +64,6 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                   FormTextField(
                     label: 'Nomor HP/WA',
                     textController: controller.noPhoneController,
-                  ),
-                  FormTextField(
-                    label: 'Nomor TPS',
-                    textController: controller.noTpsController,
                   ),
                   FormBooleanDropdown(
                     label: 'Anggota Parpol',
@@ -146,6 +141,10 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                   FormTextField(
                     label: 'Desa',
                     textController: controller.villageController,
+                  ),
+                  FormTextField(
+                    label: 'Nomor TPS',
+                    textController: controller.noTpsController,
                   ),
                   const SizedBox(height: 10),
                 ],

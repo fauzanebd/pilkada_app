@@ -5,8 +5,12 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 
 class CustomPopScreen extends StatelessWidget {
-  const CustomPopScreen(
-      {super.key, required this.body, this.appBarTitle, this.appBarTitleColor});
+  const CustomPopScreen({
+    super.key,
+    required this.body,
+    required this.appBarTitle,
+    this.appBarTitleColor,
+  });
 
   final Widget body;
   final String? appBarTitle;
