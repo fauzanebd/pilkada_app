@@ -173,6 +173,8 @@ abstract class CommonConstants {
       'DeleteAccountDialogBuilderId';
 
   static const String kVisiMisiBuilderId = 'VisiMisiBuilderId';
+  
+  static const String kCandidateProfileBuilderId = 'CandidateProfileBuilderId';
 }
 
 extension Target on Object {
