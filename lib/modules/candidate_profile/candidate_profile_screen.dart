@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
+import 'package:pilkada_app/modules/candidate_profile/candidate_profile_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
@@ -9,17 +9,17 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:get/get.dart';
 
-class VisiMisiScreen extends StatelessWidget {
-  const VisiMisiScreen({super.key});
+class CandidateProfileScreen extends StatelessWidget {
+  const CandidateProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<VisiMisiController>(
-      id: CommonConstants.kVisiMisiBuilderId,
+    return GetBuilder<CandidateProfileController>(
+      id: CommonConstants.kCandidateProfileBuilderId,
       builder: (controller) {
-        if (controller.visiMisi.text == null) {
+        if (controller.candidateProfile.text == null) {
           return CustomPopScreen(
-            appBarTitle: 'Visi & Misi',
+            appBarTitle: 'Profil Calon',
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -27,7 +27,7 @@ class VisiMisiScreen extends StatelessWidget {
         } 
 
         return CustomPopScreen(
-            appBarTitle: 'Visi & Misi',
+            appBarTitle: 'Profil Calon',
             body: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -48,7 +48,7 @@ class VisiMisiScreen extends StatelessWidget {
                           topRight: Radius.circular(20),
                         ),
                         child: CachedNetworkImage(
-                          imageUrl: controller.visiMisi.image ?? 'https://placehold.co/600x400',
+                          imageUrl: controller.candidateProfile.image ?? 'https://placehold.co/600x400',
                           fit: BoxFit.fill,
                           placeholder: (context, url) => CircularProgressIndicator(),
                           errorWidget: (context, url, error) => Container(
@@ -70,7 +70,7 @@ class VisiMisiScreen extends StatelessWidget {
                             ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
                           ],
                         ),
-                        data: controller.visiMisi.text ?? CommonConstants.defaultDescription,
+                        data: controller.candidateProfile.text ?? CommonConstants.defaultDescription,
                         styleSheet: MarkdownStyleSheet(
                           textAlign: WrapAlignment.spaceEvenly,
                           h1: CommonConstants.kNormalText.copyWith(

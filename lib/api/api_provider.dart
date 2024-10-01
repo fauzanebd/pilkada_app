@@ -52,6 +52,10 @@ class ApiProvider extends BaseProvider {
     return get(path, headers: {'Authorization': 'Bearer $token'});
   }
 
+  Future<Response> getCandidateProfile(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
   Future<Response> fetchDaftarDataPemilih(String path, String token) {
     return get(path, headers: {'Authorization': 'Bearer $token'});
   }

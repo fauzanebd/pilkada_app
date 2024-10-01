@@ -3,6 +3,8 @@ import 'package:pilkada_app/modules/auth/auth_binding.dart';
 import 'package:pilkada_app/modules/auth/auth_screen.dart';
 import 'package:pilkada_app/modules/auth/screens/login/login_bindings.dart';
 import 'package:pilkada_app/modules/auth/screens/login/login_screen.dart';
+import 'package:pilkada_app/modules/candidate_profile/candidate_profile_binding.dart';
+import 'package:pilkada_app/modules/candidate_profile/candidate_profile_screen.dart';
 import 'package:pilkada_app/modules/daftar_anggota/daftar_anggota_binding.dart';
 import 'package:pilkada_app/modules/daftar_anggota/daftar_anggota_screen.dart';
 import 'package:pilkada_app/modules/daftar_data/daftar_data_binding.dart';
@@ -80,6 +82,12 @@ class AppPages {
           name: Routes.VISI_MISI,
           page: () => const VisiMisiScreen(),
           binding: VisiMisiBinding(),
+          transition: Transition.cupertinoDialog,
+        ),
+        GetPage(
+          name: Routes.PROFIL_CALON, 
+          page: () => const CandidateProfileScreen(),
+          binding: CandidateProfileBinding(),
           transition: Transition.cupertinoDialog,
         ),
         GetPage(

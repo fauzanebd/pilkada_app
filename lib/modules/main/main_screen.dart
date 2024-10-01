@@ -67,8 +67,8 @@ class MainScreen extends GetView<MainController> {
                   crossAxisCount: 3,
                   childAspectRatio: 1, // Ensures square cells
                   children: [
-                    _buildMenuItem(Icons.person, 'Profil', onTap: () {
-                      controller.navigateToPage('Profil');
+                    _buildMenuItem(Icons.person, 'Profil Calon', onTap: () {
+                      controller.navigateToPage('Profil Calon');
                     }),
                     _buildMenuItem(Icons.emoji_events, 'Visi & Misi',
                         onTap: () {
