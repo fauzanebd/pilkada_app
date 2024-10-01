@@ -177,7 +177,7 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                     onTap: () async {
                       final res = await controller.checkDPT();
                       if (res != null) {
-                        showDPTConfirmation(context, controller, res);
+                        showDPTConfirmation(controller, res);
                       } else {
                         CommonWidget.errorSnackbar(
                             Get.context!, 'Gagal cek DPT');
@@ -194,12 +194,11 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
   }
 
   void showDPTConfirmation(
-    BuildContext context,
     DataConfirmationController controller,
     DPTCheckResponse dptCheckRes,
   ) {
     showDialog(
-      context: context,
+      context: Get.context!,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: ColorConstants.appScaffoldBackgroundColor,

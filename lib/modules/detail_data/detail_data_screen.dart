@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pilkada_app/models/response/dpt_check_response.dart';
 import 'package:pilkada_app/modules/detail_data/detail_data_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
+import 'package:pilkada_app/shared/utils/common_widget.dart';
 import 'package:pilkada_app/shared/widgets/big_primary_button.dart';
 import 'package:pilkada_app/shared/widgets/form_boolean_dropdown.dart';
 import 'package:pilkada_app/shared/widgets/form_dropdown.dart';
@@ -175,10 +178,19 @@ class DetailDataScreen extends GetView<DetailDataController> {
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
                   child: BigPrimaryButton(
-                    'Perbaharui Data',
+                    'Verifikasi DPT',
                     isLoading: false,
                     height: 50.0.h,
-                    onTap: controller.updateData,
+                    // onTap: controller.updateData,
+                    onTap: () async {
+                      final res = await controller.checkDPT();
+                      if (res != null) {
+                        showDPTConfirmation(controller, res);
+                      } else {
+                        CommonWidget.errorSnackbar(
+                            Get.context!, 'Gagal cek DPT');
+                      }
+                    },
                   ),
                 ),
               ),
@@ -186,6 +198,82 @@ class DetailDataScreen extends GetView<DetailDataController> {
           ),
         ],
       ),
+    );
+  }
+
+  void showDPTConfirmation(
+    DetailDataController controller,
+    DPTCheckResponse dptCheckRes,
+  ) {
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ColorConstants.appScaffoldBackgroundColor,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Konfirmasi DPT',
+                style: CommonConstants.kNormalText.copyWith(
+                  color: ColorConstants.accentTextColor,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: SizedBox(
+                  child: Icon(
+                    CupertinoIcons.xmark,
+                    size: 20.sp,
+                    color: ColorConstants.primaryAccentColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            dptCheckRes.isValidDpt
+                ? 'Data ${controller.nameController.text} valid terdaftar di DPT'
+                : 'Data ${controller.nameController.text} tidak valid terdaftar di DPT.\nTetap simpan data?',
+            style: CommonConstants.kNormalText.copyWith(
+              color: ColorConstants.black,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: ColorConstants.red),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Batal simpan data',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstants.primaryAccentColor),
+              onPressed: () {
+                controller.updateData();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                dptCheckRes.isValidDpt
+                    ? 'Lanjut simpan data'
+                    : 'Ya, tetap simpan data',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

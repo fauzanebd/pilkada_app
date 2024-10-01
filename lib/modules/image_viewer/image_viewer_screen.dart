@@ -13,7 +13,6 @@ class ImageViewerScreen extends GetView<ImageViewerController> {
     return CustomPopScreen(
       appBarTitle: path.basename(controller.imagePath),
       body: Center(
-        // child: Text('image goes here'),
         child: PhotoView(
           imageProvider: AssetImage(controller.imagePath),
         ),

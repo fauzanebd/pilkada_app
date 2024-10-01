@@ -8,6 +8,8 @@ import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/city.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/province.dart';
+import 'package:pilkada_app/models/request/dpt_check_request.dart';
+import 'package:pilkada_app/models/response/dpt_check_response.dart';
 import 'package:pilkada_app/models/response/meta.dart';
 import 'package:pilkada_app/models/subdistrict.dart';
 import 'package:pilkada_app/models/ward.dart';
@@ -23,6 +25,7 @@ class DetailDataController extends GetxController {
   DetailDataArgs args = Get.arguments as DetailDataArgs;
 
   DataPemilih? dataPemilih;
+  DPTCheckResponse? dptCheckResponse;
 
   String? token;
   late String s3FileName;
@@ -259,13 +262,102 @@ class DetailDataController extends GetxController {
     }
   }
 
+  Future<DPTCheckResponse?> checkDPT() async {
+    EasyLoading.show(status: 'Menjalankan verifikasi DPT...');
+    try {
+      if (selectedProvince != null) {
+        dataPemilih!.provinceCode = selectedProvince!.code;
+        dataPemilih!.provinceName = selectedProvince!.name;
+      } else {
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
+        return null;
+      }
+
+      if (selectedCity != null) {
+        dataPemilih!.cityCode = selectedCity!.code;
+        dataPemilih!.cityName = selectedCity!.name;
+      } else {
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kota terlebih dahulu');
+        return null;
+      }
+
+      if (selectedSubdistrict != null) {
+        dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
+        dataPemilih!.subdistrictName = selectedSubdistrict!.name;
+      } else {
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
+        return null;
+      }
+
+      if (selectedWard != null) {
+        dataPemilih!.wardCode = selectedWard!.code;
+        dataPemilih!.wardName = selectedWard!.name;
+      } else {
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kelurahan terlebih dahulu');
+        return null;
+      }
+
+      final res = await apiRepository.checkDPT(
+        data: DPTCheckRequest(
+          name: nameController.text,
+          gender: genderController.text,
+          wardCode: selectedWard!.code,
+        ),
+        token: token!,
+      );
+      if (res != null) {
+        // set dptCheckResponse for this class
+        dptCheckResponse = res;
+      }
+      // return for screen
+      return res;
+    } catch (e) {
+      CommonWidget.errorSnackbar(Get.context!, 'Gagal cek DPT: $e');
+      return null;
+    } finally {
+      EasyLoading.dismiss();
+      isLoading.value = false;
+    }
+  }
+
   Future<void> updateData() async {
     isLoading.value = true;
     String? res;
+    bool isDPTVerified = false;
+    int? dptId;
+    String? nameFromDPTCheck;
+    String? addressFromDPTCheck;
+    String? tpsNumberFromDPTCheck;
+
     try {
-      dataPemilih!.name = nameController.text;
+      if (dptCheckResponse != null &&
+          dptCheckResponse!.isValidDpt &&
+          dptCheckResponse!.potentialDpt.isNotEmpty) {
+        nameFromDPTCheck = dptCheckResponse!.potentialDpt[0].name;
+        addressFromDPTCheck = dptCheckResponse!.potentialDpt[0].address;
+        tpsNumberFromDPTCheck = dptCheckResponse!.potentialDpt[0].tpsNo;
+        isDPTVerified = true;
+        dptId = dptCheckResponse!.potentialDpt[0].id;
+      }
+
+      if (nameFromDPTCheck != null) {
+        dataPemilih!.name = nameFromDPTCheck;
+      } else {
+        dataPemilih!.name = nameController.text;
+      }
+
       dataPemilih!.nik = nikController.text;
-      dataPemilih!.address = addressController.text;
+
+      if (addressFromDPTCheck != null) {
+        dataPemilih!.address = addressFromDPTCheck;
+      } else {
+        dataPemilih!.address = addressController.text;
+      }
+
       if (birthDateController.text.isNotEmpty) {
         dataPemilih!.birthDate = birthDateController.text;
       } else {
@@ -274,7 +366,13 @@ class DetailDataController extends GetxController {
 
       dataPemilih!.gender = genderController.text;
       dataPemilih!.noPhone = noPhoneController.text;
-      dataPemilih!.noTps = noTpsController.text;
+
+      if (tpsNumberFromDPTCheck != null) {
+        dataPemilih!.noTps = tpsNumberFromDPTCheck;
+      } else {
+        dataPemilih!.noTps = noTpsController.text;
+      }
+
       dataPemilih!.isPartyMember = isPartyMemberController.text == 'true';
       dataPemilih!.category = categoryController.text;
       dataPemilih!.confirmationStatus = confirmationStatusController.text;
@@ -305,6 +403,9 @@ class DetailDataController extends GetxController {
         dataPemilih!.wardCode = selectedWard!.code;
         dataPemilih!.wardName = selectedWard!.name;
       }
+
+      dataPemilih!.isVerified = isDPTVerified;
+      dataPemilih!.dptId = dptId;
 
       EasyLoading.show(status: 'Updating data...');
       res = await apiRepository.updateData(dataPemilih!, token!);
