@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/request/login_request.dart';
-import 'package:pilkada_app/models/response/anggota.dart';
 import 'package:pilkada_app/models/response/daftar_data_pemilih_response.dart';
 import 'package:pilkada_app/models/response/error_response.dart';
 import 'package:pilkada_app/models/response/list_anggota_response.dart';
+import 'package:pilkada_app/models/response/list_cities_response.dart';
+import 'package:pilkada_app/models/response/list_provinces_response.dart';
+import 'package:pilkada_app/models/response/list_subdistrict_response.dart';
+import 'package:pilkada_app/models/response/list_wards_response.dart';
 import 'package:pilkada_app/models/response/login_response.dart';
 import 'package:pilkada_app/models/response/save_data_response.dart';
 import 'package:pilkada_app/models/response/update_data_response.dart';
@@ -132,7 +135,7 @@ class ApiRepository {
       String token, int limit, int page,
       {String? query, String? clientCode}) async {
     String qargs = "";
-    if (query != null) {
+    if (query != null && query.isNotEmpty) {
       qargs = "&q=$query";
     }
     final res = await apiProvider.fetchDaftarDataPemilih(
@@ -157,6 +160,94 @@ class ApiRepository {
     switch (res.statusCode) {
       case 200:
         return ListAnggotaResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<ListProvincesResponse> fetchProvinces(
+      String token, int limit, int page,
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null && query.isNotEmpty) {
+      qargs = "&q=$query";
+    }
+    final res = await apiProvider.fetchProvinces(
+        '/locations/provinces?limit=$limit&page=$page&client_code=$clientCode$qargs',
+        token);
+    switch (res.statusCode) {
+      case 200:
+        return ListProvincesResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<ListCitiesResponse> fetchCities(
+      String token, int limit, int page, String provinceCode,
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null && query.isNotEmpty) {
+      qargs = "&q=$query";
+    }
+    final res = await apiProvider.fetchCities(
+        '/locations/cities?limit=$limit&page=$page&province_code=$provinceCode&client_code=$clientCode$qargs',
+        token);
+    switch (res.statusCode) {
+      case 200:
+        return ListCitiesResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<ListSubdistrictResponse> fetchSubdistricts(
+      String token, int limit, int page, String cityCode,
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null && query.isNotEmpty) {
+      qargs = "&q=$query";
+    }
+    final res = await apiProvider.fetchSubdistricts(
+        '/locations/subdistricts?limit=$limit&page=$page&city_code=$cityCode&client_code=$clientCode$qargs',
+        token);
+    switch (res.statusCode) {
+      case 200:
+        return ListSubdistrictResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<ListWardsResponse> fetchWards(
+      String token, int limit, int page, String subdistrictCode,
+      {String? query, String? clientCode}) async {
+    String qargs = "";
+    if (query != null && query.isNotEmpty) {
+      qargs = "&q=$query";
+    }
+    final res = await apiProvider.fetchWards(
+        '/locations/wards?limit=$limit&page=$page&subdistrict_code=$subdistrictCode&client_code=$clientCode$qargs',
+        token);
+    switch (res.statusCode) {
+      case 200:
+        return ListWardsResponse.fromJson(res.body);
       case null: //null statusCode happen when theres no internet connection
         throw NetworkException(
             'Connection timed out. Check your internet connection',

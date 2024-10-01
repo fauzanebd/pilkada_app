@@ -54,7 +54,12 @@ abstract class CommonConstants {
 
   // pilkada app
 
-  static const String kDatePickerBuilder = 'DatePickerBuilder';
+  static const String kDatePickerBuilderId = 'DatePickerBuilder';
+  static const String kProvincePickerBuilderId = 'ProvincePickerBuilderId';
+  static const String kCitiesPickerBuilderId = 'CitiesPickerBuilderId';
+  static const String kSubdistrictsPickerBuilderId =
+      'SubdistrictsPickerBuilderId';
+  static const String kWardsPickerBuilderId = 'WardsPickerBuilderId';
 
   static const String kDaftarDataBuilderId = 'DaftarDataBuilderId';
   static const String kDaftarAnggotaBuilderId = 'DaftarAnggotaBuilderId';

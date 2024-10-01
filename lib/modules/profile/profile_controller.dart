@@ -111,7 +111,7 @@ class ProfileController extends GetxController {
         croppedFile = await _cropImage(image);
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
-          EasyLoading.show(status: 'Uploading image...');
+          EasyLoading.show(status: 'Mengunggah gambar...');
           await _uploadImage(File(croppedFile.path));
           EasyLoading.dismiss();
         }
@@ -133,7 +133,7 @@ class ProfileController extends GetxController {
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
           EasyLoading.show(
-              status: 'Uploading image...',
+              status: 'Mengunggah gambar...',
               maskType: EasyLoadingMaskType.black);
           await _uploadImage(File(croppedFile.path));
           EasyLoading.dismiss();

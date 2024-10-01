@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,21 +7,22 @@ import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/city.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
 import 'package:pilkada_app/models/province.dart';
-import 'package:pilkada_app/models/response/meta.dart';
-import 'package:pilkada_app/models/response/save_data_response.dart';
-import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/subdistrict.dart';
 import 'package:pilkada_app/models/ward.dart';
-import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.dart';
+import 'package:pilkada_app/models/response/meta.dart';
+import 'package:pilkada_app/modules/daftar_data/daftar_data_controller.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
+import 'package:pilkada_app/shared/widgets/location_picker_bottom_sheet.dart';
 
-class DataConfirmationController extends GetxController {
+class DetailDataController extends GetxController {
   final ApiRepository apiRepository;
-  DataConfirmationController({required this.apiRepository});
+  DetailDataController({required this.apiRepository});
 
-  DataConfirmationArgs args = Get.arguments as DataConfirmationArgs;
-  UploadImageResponse? uploadImageResponse;
+  DetailDataArgs args = Get.arguments as DetailDataArgs;
+
+  DataPemilih? dataPemilih;
+
   String? token;
   late String s3FileName;
 
@@ -75,8 +75,6 @@ class DataConfirmationController extends GetxController {
 
   Timer? _debounce;
 
-  DataPemilih? dataPemilih;
-
   List<String> gender = const ['L', 'P'];
 
   List<String> positioningToCandidateValues = const [
@@ -100,8 +98,8 @@ class DataConfirmationController extends GetxController {
     'Santai',
   ];
 
-  // Form
-  final GlobalKey<FormState> dataConfirmationFormKey = GlobalKey<FormState>();
+  // Form controllers
+  final GlobalKey<FormState> detailDataKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final nikController = TextEditingController();
   final addressController = TextEditingController();
@@ -124,53 +122,42 @@ class DataConfirmationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    uploadImageResponse = args.uploadImageResponse;
-    s3FileName = uploadImageResponse!.data.s3File ?? '';
-    token = args.token;
-    dataPemilih = uploadImageResponse!.data;
+    initializeData();
+    setupScrollListeners();
+  }
 
+  void initializeData() {
+    dataPemilih = args.dataPemilih;
+    s3FileName = dataPemilih!.s3File ?? '';
+    token = args.token;
+
+    // Initialize text controllers
     nameController.text = dataPemilih!.name ?? '';
     nikController.text = dataPemilih!.nik ?? '';
     addressController.text = dataPemilih!.address ?? '';
     birthDateController.text = dataPemilih!.birthDate ?? '';
-    genderController.text = dataPemilih!.gender ?? gender[0];
-    isPartyMemberController.text =
-        dataPemilih!.isPartyMember?.toString() ?? "false";
+    genderController.text = dataPemilih!.gender ?? '';
+    noPhoneController.text = dataPemilih!.noPhone ?? '';
+    noTpsController.text = dataPemilih!.noTps ?? '';
+    isPartyMemberController.text = dataPemilih!.isPartyMember?.toString() ?? '';
+    categoryController.text = dataPemilih!.category ?? '';
+    confirmationStatusController.text = dataPemilih!.confirmationStatus ?? '';
+    expectationToCandidateController.text =
+        dataPemilih!.expectationToCandidate ?? '';
+    positioningToCandidateController.text =
+        dataPemilih!.positioningToCandidate ?? '';
+    relationToCandidateController.text = dataPemilih!.relationToCandidate ?? '';
 
-    // locations
-    if (dataPemilih!.provinceCode != null) {
-      selectedProvince = Province(
-        code: dataPemilih!.provinceCode!,
-        name: dataPemilih!.provinceName!,
-      );
-    }
+    // Initialize location controllers
     provinceController.text = dataPemilih!.provinceName ?? 'Pilih Provinsi';
-    if (dataPemilih!.cityCode != null) {
-      selectedCity = City(
-        code: dataPemilih!.cityCode!,
-        name: dataPemilih!.cityName!,
-        provinceCode: dataPemilih!.provinceCode!,
-      );
-    }
     cityController.text = dataPemilih!.cityName ?? 'Pilih Kota';
-    if (dataPemilih!.subdistrictCode != null) {
-      selectedSubdistrict = Subdistrict(
-        cityCode: dataPemilih!.cityCode!,
-        code: dataPemilih!.subdistrictCode!,
-        name: dataPemilih!.subdistrictName!,
-      );
-    }
     subdistrictController.text =
         dataPemilih!.subdistrictName ?? 'Pilih Kecamatan';
-    if (dataPemilih!.wardCode != null) {
-      selectedWard = Ward(
-        code: dataPemilih!.wardCode!,
-        name: dataPemilih!.wardName!,
-        subdistrictCode: dataPemilih!.subdistrictCode!,
-      );
-    }
-    wardController.text = 'Pilih Desa';
+    wardController.text = dataPemilih!.wardName ?? 'Pilih Kelurahan';
+    villageController.text = dataPemilih!.villageName ?? '';
+  }
 
+  void setupScrollListeners() {
     provincesPickerScrollController.addListener(_provincesPickerScrollListener);
     citiesPickerScrollController.addListener(_citiesPickerScrollListener);
     subdistrictsPickerScrollController
@@ -180,7 +167,20 @@ class DataConfirmationController extends GetxController {
 
   @override
   void onClose() {
+    disposeScrollControllers();
+    disposeTextControllers();
+    _debounce?.cancel();
     super.onClose();
+  }
+
+  void disposeScrollControllers() {
+    provincesPickerScrollController.dispose();
+    citiesPickerScrollController.dispose();
+    subdistrictsPickerScrollController.dispose();
+    wardsPickerScrollController.dispose();
+  }
+
+  void disposeTextControllers() {
     nameController.dispose();
     nikController.dispose();
     addressController.dispose();
@@ -194,26 +194,11 @@ class DataConfirmationController extends GetxController {
     expectationToCandidateController.dispose();
     positioningToCandidateController.dispose();
     relationToCandidateController.dispose();
-
-    //provinces dispose
-    provincesPickerScrollController
-        .removeListener(_provincesPickerScrollListener);
-    provincesPickerScrollController.dispose();
-
-    //cities dispose
-    citiesPickerScrollController.removeListener(_citiesPickerScrollListener);
-    citiesPickerScrollController.dispose();
-
-    // subdistricts dispose
-    subdistrictsPickerScrollController
-        .removeListener(_subdistrictsPickerScrollListener);
-    subdistrictsPickerScrollController.dispose();
-
-    // wards dispose
-    wardsPickerScrollController.removeListener(_wardsPickerScrollListener);
-    wardsPickerScrollController.dispose();
-
-    _debounce?.cancel();
+    provinceController.dispose();
+    cityController.dispose();
+    subdistrictController.dispose();
+    villageController.dispose();
+    wardController.dispose();
   }
 
   void _provincesPickerScrollListener() {
@@ -252,61 +237,20 @@ class DataConfirmationController extends GetxController {
     }
   }
 
-  Future<void> saveData() async {
+  Future<void> updateData() async {
     isLoading.value = true;
-    SaveDataResponse? res;
+    String? res;
     try {
-      dataPemilih!.name = nameController.text;
-      dataPemilih!.nik = nikController.text;
-      dataPemilih!.address = addressController.text;
-      if (birthDateController.text.isNotEmpty) {
-        dataPemilih!.birthDate = birthDateController.text;
-      } else {
-        dataPemilih!.birthDate = null;
-      }
-      dataPemilih!.gender = genderController.text;
-      dataPemilih!.noPhone = noPhoneController.text;
-      dataPemilih!.noTps = noTpsController.text;
-      dataPemilih!.isPartyMember = isPartyMemberController.text == 'true';
-      dataPemilih!.category = categoryController.text;
-      dataPemilih!.confirmationStatus = confirmationStatusController.text;
-      dataPemilih!.expectationToCandidate =
-          expectationToCandidateController.text;
-      dataPemilih!.positioningToCandidate =
-          positioningToCandidateController.text;
-      dataPemilih!.relationToCandidate = relationToCandidateController.text;
-
-      dataPemilih!.villageCode = villageController.text;
-
-      if (selectedProvince != null) {
-        dataPemilih!.provinceCode = selectedProvince!.code;
-        dataPemilih!.provinceName = selectedProvince!.name;
-      }
-
-      if (selectedCity != null) {
-        dataPemilih!.cityCode = selectedCity!.code;
-        dataPemilih!.cityName = selectedCity!.name;
-      }
-
-      if (selectedSubdistrict != null) {
-        dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
-        dataPemilih!.subdistrictName = selectedSubdistrict!.name;
-      }
-
-      if (selectedWard != null) {
-        dataPemilih!.wardCode = selectedWard!.code;
-        dataPemilih!.wardName = selectedWard!.name;
-      }
-
-      EasyLoading.show(status: 'Saving data...');
-
-      res = await apiRepository.saveData(dataPemilih!, token!);
+      updateDataPemilih();
+      EasyLoading.show(status: 'Updating data...');
+      res = await apiRepository.updateData(dataPemilih!, token!);
       isLoading.value = false;
       if (res != null) {
-        EasyLoading.dismiss();
+        Get.find<DaftarDataController>().updateDataItem(dataPemilih!);
         ScaffoldMessenger.of(Get.context!).showSnackBar(
-          const SnackBar(content: Text('Data telah berhasil disimpan.')),
+          SnackBar(content: Text('$res. Thank you!')),
         );
+        EasyLoading.dismiss();
         Get.back();
       }
     } catch (e) {
@@ -314,70 +258,63 @@ class DataConfirmationController extends GetxController {
       isLoading.value = false;
       ScaffoldMessenger.of(Get.context!).showSnackBar(
         const SnackBar(
-            content: Text(
-                'Gagal menyimpan data. Silahkan coba lagi beberapa saat.')),
+            content: Text('Failed to update data. Please try again.')),
       );
       Get.back();
     }
   }
 
-  Future<void> _onProvinceSearchChanged(String query) async {
+  void updateDataPemilih() {
+    dataPemilih!.name = nameController.text;
+    dataPemilih!.nik = nikController.text;
+    dataPemilih!.address = addressController.text;
+    dataPemilih!.birthDate =
+        birthDateController.text.isNotEmpty ? birthDateController.text : null;
+    dataPemilih!.gender = genderController.text;
+    dataPemilih!.noPhone = noPhoneController.text;
+    dataPemilih!.noTps = noTpsController.text;
+    dataPemilih!.isPartyMember = isPartyMemberController.text == 'true';
+    dataPemilih!.category = categoryController.text;
+    dataPemilih!.confirmationStatus = confirmationStatusController.text;
+    dataPemilih!.expectationToCandidate = expectationToCandidateController.text;
+    dataPemilih!.positioningToCandidate = positioningToCandidateController.text;
+    dataPemilih!.relationToCandidate = relationToCandidateController.text;
+
+    if (selectedProvince != null) {
+      dataPemilih!.provinceCode = selectedProvince!.code;
+      dataPemilih!.provinceName = selectedProvince!.name;
+    }
+    if (selectedCity != null) {
+      dataPemilih!.cityCode = selectedCity!.code;
+      dataPemilih!.cityName = selectedCity!.name;
+    }
+    if (selectedSubdistrict != null) {
+      dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
+      dataPemilih!.subdistrictName = selectedSubdistrict!.name;
+    }
+    if (selectedWard != null) {
+      dataPemilih!.wardCode = selectedWard!.code;
+      dataPemilih!.wardName = selectedWard!.name;
+    }
+    dataPemilih!.villageName = villageController.text;
+  }
+
+  Future<void> _onSearchChanged(String query, Function fetchFunction) async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
-      provincesSearchQuery = query;
-      await refreshProvinces(query);
+      await fetchFunction(query);
       update([CommonConstants.kProvincePickerBuilderId]);
-    });
-  }
-
-  Future<void> _onCitySearchChanged(String query) async {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
-      citiesSearchQuery = query;
-      await refreshCities(query);
-      update([CommonConstants.kCitiesPickerBuilderId]);
-    });
-  }
-
-  Future<void> _onSubdistrictSearchChanged(String query) async {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
-      subdistrictsSearchQuery = query;
-      await refreshSubdistricts(query);
-      update([CommonConstants.kSubdistrictsPickerBuilderId]);
-    });
-  }
-
-  Future<void> _onWardSearchChanged(String query) async {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
-      wardsSearchQuery = query;
-      await refreshWards(query);
-      update([CommonConstants.kWardsPickerBuilderId]);
     });
   }
 
   void showProvincesPicker() async {
     await fetchProvinces('');
-    showModalBottomSheet(
-      context: Get.context!,
-      builder: (context) => ProvincePickerBottomSheet(
-        title: 'Provinsi',
-        onItemSelected: (item) {
-          selectedProvince = item;
-          provinceController.text = item.name;
-          refreshProvinces('', refetch: false);
-          // Clear city, subdistrict, and ward when province is changed
-          selectedCity = null;
-          selectedSubdistrict = null;
-          selectedWard = null;
-          cityController.text = 'Pilih Kota';
-          subdistrictController.text = 'Pilih Kecamatan';
-          wardController.text = 'Pilih Kelurahan';
-        },
-        onSearchChanged: _onProvinceSearchChanged,
-      ),
-    );
+    showLocationPicker('Provinsi', provinces, (item) {
+      selectedProvince = item;
+      provinceController.text = item.name;
+      resetLocationFields('province');
+      refreshProvinces('', refetch: false);
+    }, (query) => _onSearchChanged(query, fetchProvinces));
   }
 
   void showCitiesPicker() async {
@@ -386,23 +323,12 @@ class DataConfirmationController extends GetxController {
       return;
     }
     await fetchCities('');
-    showModalBottomSheet(
-      context: Get.context!,
-      builder: (context) => CitiesPickerBottomSheet(
-        title: 'Kota',
-        onItemSelected: (item) {
-          selectedCity = item;
-          cityController.text = item.name;
-          refreshCities('', refetch: false);
-          // Clear subdistrict and ward when city is changed
-          selectedSubdistrict = null;
-          selectedWard = null;
-          subdistrictController.text = 'Pilih Kecamatan';
-          wardController.text = 'Pilih Kelurahan';
-        },
-        onSearchChanged: _onCitySearchChanged,
-      ),
-    );
+    showLocationPicker('Kota', cities, (item) {
+      selectedCity = item;
+      cityController.text = item.name;
+      resetLocationFields('city');
+      refreshCities('', refetch: false);
+    }, (query) => _onSearchChanged(query, fetchCities));
   }
 
   void showSubdistrictsPicker() async {
@@ -411,21 +337,12 @@ class DataConfirmationController extends GetxController {
       return;
     }
     await fetchSubdistricts('');
-    showModalBottomSheet(
-      context: Get.context!,
-      builder: (context) => SubdistrictPickerBottomSheet(
-        title: 'Kecamatan',
-        onItemSelected: (item) {
-          selectedSubdistrict = item;
-          subdistrictController.text = item.name;
-          refreshSubdistricts('', refetch: false);
-          // Clear ward when subdistrict is changed
-          selectedWard = null;
-          wardController.text = 'Pilih Kelurahan';
-        },
-        onSearchChanged: _onSubdistrictSearchChanged,
-      ),
-    );
+    showLocationPicker('Kecamatan', subdistricts, (item) {
+      selectedSubdistrict = item;
+      subdistrictController.text = item.name;
+      resetLocationFields('subdistrict');
+      refreshSubdistricts('', refetch: false);
+    }, (query) => _onSearchChanged(query, fetchSubdistricts));
   }
 
   void showWardsPicker() async {
@@ -434,18 +351,98 @@ class DataConfirmationController extends GetxController {
       return;
     }
     await fetchWards('');
+    showLocationPicker('Kelurahan', wards, (item) {
+      selectedWard = item;
+      wardController.text = item.name;
+      refreshWards('', refetch: false);
+    }, (query) => _onSearchChanged(query, fetchWards));
+  }
+
+  void showLocationPicker(String title, List<dynamic> items,
+      Function(dynamic) onItemSelected, Function(String) onSearchChanged) {
     showModalBottomSheet(
       context: Get.context!,
-      builder: (context) => WardPickerBottomSheet(
-        title: 'Kelurahan',
-        onItemSelected: (item) {
-          selectedWard = item;
-          wardController.text = item.name;
-          refreshWards('', refetch: false);
-        },
-        onSearchChanged: _onWardSearchChanged,
+      builder: (context) => LocationPickerBottomSheet(
+        title: title,
+        items: items,
+        onItemSelected: onItemSelected,
+        onSearchChanged: onSearchChanged,
+        scrollController: getScrollController(title),
+        theresMore: getTheresMore(title),
+        isLoading: getIsLoading(title),
       ),
     );
+  }
+
+  ScrollController getScrollController(String title) {
+    switch (title) {
+      case 'Provinsi':
+        return provincesPickerScrollController;
+      case 'Kota':
+        return citiesPickerScrollController;
+      case 'Kecamatan':
+        return subdistrictsPickerScrollController;
+      case 'Kelurahan':
+        return wardsPickerScrollController;
+      default:
+        return ScrollController();
+    }
+  }
+
+  RxBool getTheresMore(String title) {
+    switch (title) {
+      case 'Provinsi':
+        return theresMoreProvinces;
+      case 'Kota':
+        return theresMoreCities;
+      case 'Kecamatan':
+        return theresMoreSubdistricts;
+      case 'Kelurahan':
+        return theresMoreWards;
+      default:
+        return RxBool(false);
+    }
+  }
+
+  RxBool getIsLoading(String title) {
+    switch (title) {
+      case 'Provinsi':
+        return isProvincesLoading;
+      case 'Kota':
+        return isCitiesLoading;
+      case 'Kecamatan':
+        return isSubdistrictsLoading;
+      case 'Kelurahan':
+        return isWardsLoading;
+      default:
+        return RxBool(false);
+    }
+  }
+
+  void resetLocationFields(String level) {
+    switch (level) {
+      case 'province':
+        selectedCity = null;
+        selectedSubdistrict = null;
+        selectedWard = null;
+        cityController.text = 'Pilih Kota';
+        subdistrictController.text = 'Pilih Kecamatan';
+        wardController.text = 'Pilih Kelurahan';
+        villageController.text = '';
+        break;
+      case 'city':
+        selectedSubdistrict = null;
+        selectedWard = null;
+        subdistrictController.text = 'Pilih Kecamatan';
+        wardController.text = 'Pilih Kelurahan';
+        villageController.text = '';
+        break;
+      case 'subdistrict':
+        selectedWard = null;
+        wardController.text = 'Pilih Kelurahan';
+        villageController.text = '';
+        break;
+    }
   }
 
   Future<void> refreshProvinces(String query, {bool refetch = true}) async {
@@ -519,18 +516,8 @@ class DataConfirmationController extends GetxController {
         provincesMeta.value = value.meta;
         return value.data;
       });
-      if (newProvinces.isEmpty) {
-        theresMoreProvinces.value = false;
-      } else {
-        provinces.addAll(newProvinces);
-        currentProvincesPage++;
-        if (provincesMeta.value!.total >
-            currentProvincesPage * provincesPerPage) {
-          theresMoreProvinces.value = true;
-        } else {
-          theresMoreProvinces.value = false;
-        }
-      }
+      handleFetchResult(newProvinces, provinces, currentProvincesPage,
+          provincesPerPage, theresMoreProvinces, provincesMeta);
       update([CommonConstants.kProvincePickerBuilderId]);
     } catch (e) {
       CommonWidget.toast('Failed to fetch provinces: $e');
@@ -560,17 +547,8 @@ class DataConfirmationController extends GetxController {
         citiesMeta.value = value.meta;
         return value.data;
       });
-      if (newCities.isEmpty) {
-        theresMoreCities.value = false;
-      } else {
-        cities.addAll(newCities);
-        currentCitiesPage++;
-        if (citiesMeta.value!.total > currentCitiesPage * citiesPerPage) {
-          theresMoreCities.value = true;
-        } else {
-          theresMoreCities.value = false;
-        }
-      }
+      handleFetchResult(newCities, cities, currentCitiesPage, citiesPerPage,
+          theresMoreCities, citiesMeta);
       update([CommonConstants.kCitiesPickerBuilderId]);
     } catch (e) {
       CommonWidget.toast('Failed to fetch cities: $e');
@@ -600,18 +578,8 @@ class DataConfirmationController extends GetxController {
         subdistrictsMeta.value = value.meta;
         return value.data;
       });
-      if (newSubdistricts.isEmpty) {
-        theresMoreSubdistricts.value = false;
-      } else {
-        subdistricts.addAll(newSubdistricts);
-        currentSubdistrictsPage++;
-        if (subdistrictsMeta.value!.total >
-            currentSubdistrictsPage * subdistrictsPerPage) {
-          theresMoreSubdistricts.value = true;
-        } else {
-          theresMoreSubdistricts.value = false;
-        }
-      }
+      handleFetchResult(newSubdistricts, subdistricts, currentSubdistrictsPage,
+          subdistrictsPerPage, theresMoreSubdistricts, subdistrictsMeta);
       update([CommonConstants.kSubdistrictsPickerBuilderId]);
     } catch (e) {
       CommonWidget.toast('Failed to fetch subdistricts: $e');
@@ -641,17 +609,8 @@ class DataConfirmationController extends GetxController {
         wardsMeta.value = value.meta;
         return value.data;
       });
-      if (newWards.isEmpty) {
-        theresMoreWards.value = false;
-      } else {
-        wards.addAll(newWards);
-        currentWardsPage++;
-        if (wardsMeta.value!.total > currentWardsPage * wardsPerPage) {
-          theresMoreWards.value = true;
-        } else {
-          theresMoreWards.value = false;
-        }
-      }
+      handleFetchResult(newWards, wards, currentWardsPage, wardsPerPage,
+          theresMoreWards, wardsMeta);
       update([CommonConstants.kWardsPickerBuilderId]);
     } catch (e) {
       CommonWidget.toast('Failed to fetch wards: $e');
@@ -660,10 +619,25 @@ class DataConfirmationController extends GetxController {
       update([CommonConstants.kWardsPickerBuilderId]);
     }
   }
+
+  void handleFetchResult(List newItems, List items, int currentPage,
+      int perPage, RxBool theresMore, Rx<Meta?> meta) {
+    if (newItems.isEmpty) {
+      theresMore.value = false;
+    } else {
+      items.addAll(newItems);
+      currentPage++;
+      if (meta.value!.total > currentPage * perPage) {
+        theresMore.value = true;
+      } else {
+        theresMore.value = false;
+      }
+    }
+  }
 }
 
-class DataConfirmationArgs {
+class DetailDataArgs {
   final String token;
-  final UploadImageResponse uploadImageResponse;
-  DataConfirmationArgs(this.token, this.uploadImageResponse);
+  final DataPemilih dataPemilih;
+  DetailDataArgs(this.token, this.dataPemilih);
 }

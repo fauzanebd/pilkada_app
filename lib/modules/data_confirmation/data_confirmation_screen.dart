@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
+import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
 import 'package:pilkada_app/shared/widgets/big_primary_button.dart';
@@ -114,11 +115,35 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                     label: 'Hubungan dengan Kandidat',
                     textController: controller.relationToCandidateController,
                   ),
+                  FormTextField(
+                    label: 'Provinsi',
+                    textController: controller.provinceController,
+                    readonly: true,
+                    onTap: () => controller.showProvincesPicker(),
+                  ),
+                  FormTextField(
+                    label: 'Kota',
+                    textController: controller.cityController,
+                    readonly: true,
+                    onTap: () => controller.showCitiesPicker(),
+                  ),
+                  FormTextField(
+                    label: 'Kecamatan',
+                    textController: controller.subdistrictController,
+                    readonly: true,
+                    onTap: () => controller.showSubdistrictsPicker(),
+                  ),
+                  FormTextField(
+                    label: 'Kelurahan',
+                    textController: controller.wardController,
+                    readonly: true,
+                    onTap: () => controller.showWardsPicker(),
+                  ),
+                  FormTextField(
+                    label: 'Desa',
+                    textController: controller.villageController,
+                  ),
                   const SizedBox(height: 10),
-                  // ElevatedButton(
-                  //   onPressed: controller.saveData,
-                  //   child: const Text('Save Data'),
-                  // ),
                 ],
               ),
             ),
@@ -142,7 +167,7 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
                   child: BigPrimaryButton(
-                    'Save Data',
+                    'Simpan Data',
                     isLoading: false,
                     height: 50.0.h,
                     onTap: controller.saveData,
@@ -154,6 +179,394 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
         ],
       ),
     );
+  }
+}
+
+class ProvincePickerBottomSheet extends StatelessWidget {
+  final String title;
+  final Function(dynamic) onItemSelected;
+  final void Function(String) onSearchChanged;
+
+  const ProvincePickerBottomSheet({
+    super.key,
+    required this.title,
+    required this.onItemSelected,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<DataConfirmationController>(
+        id: CommonConstants.kProvincePickerBuilderId,
+        builder: (controller) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      // Implement search functionality here
+                      onSearchChanged(value);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: (controller.provinces.isNotEmpty)
+                      ? ListView.builder(
+                          controller:
+                              controller.provincesPickerScrollController,
+                          itemCount: controller.provinces.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index < controller.provinces.length) {
+                              final item = controller.provinces[index];
+                              return ListTile(
+                                title: Text(item.name),
+                                onTap: () {
+                                  onItemSelected(item);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            } else if (controller.theresMoreProvinces.value) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tidak ada Provinsi',
+                              style: CommonConstants.kNormalText.copyWith(
+                                color: ColorConstants.accentTextColor,
+                                fontSize: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class CitiesPickerBottomSheet extends StatelessWidget {
+  final String title;
+  final Function(dynamic) onItemSelected;
+  final void Function(String) onSearchChanged;
+
+  const CitiesPickerBottomSheet({
+    super.key,
+    required this.title,
+    required this.onItemSelected,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<DataConfirmationController>(
+        id: CommonConstants.kCitiesPickerBuilderId,
+        builder: (controller) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      onSearchChanged(value);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: (controller.cities.isNotEmpty)
+                      ? ListView.builder(
+                          controller: controller.citiesPickerScrollController,
+                          itemCount: controller.cities.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index < controller.cities.length) {
+                              final item = controller.cities[index];
+                              return ListTile(
+                                title: Text(item.name),
+                                onTap: () {
+                                  onItemSelected(item);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            } else if (controller.theresMoreCities.value) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tidak ada Kota',
+                              style: CommonConstants.kNormalText.copyWith(
+                                color: ColorConstants.accentTextColor,
+                                fontSize: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class SubdistrictPickerBottomSheet extends StatelessWidget {
+  final String title;
+  final Function(dynamic) onItemSelected;
+  final void Function(String) onSearchChanged;
+
+  const SubdistrictPickerBottomSheet({
+    super.key,
+    required this.title,
+    required this.onItemSelected,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<DataConfirmationController>(
+        id: CommonConstants.kSubdistrictsPickerBuilderId,
+        builder: (controller) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onChanged: onSearchChanged,
+                  ),
+                ),
+                Expanded(
+                  child: (controller.subdistricts.isNotEmpty)
+                      ? ListView.builder(
+                          controller:
+                              controller.subdistrictsPickerScrollController,
+                          itemCount: controller.subdistricts.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index < controller.subdistricts.length) {
+                              final item = controller.subdistricts[index];
+                              return ListTile(
+                                title: Text(item.name),
+                                onTap: () {
+                                  onItemSelected(item);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            } else if (controller
+                                .theresMoreSubdistricts.value) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tidak ada Kecamatan',
+                              style: CommonConstants.kNormalText.copyWith(
+                                color: ColorConstants.accentTextColor,
+                                fontSize: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class WardPickerBottomSheet extends StatelessWidget {
+  final String title;
+  final Function(dynamic) onItemSelected;
+  final void Function(String) onSearchChanged;
+
+  const WardPickerBottomSheet({
+    super.key,
+    required this.title,
+    required this.onItemSelected,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<DataConfirmationController>(
+        id: CommonConstants.kWardsPickerBuilderId,
+        builder: (controller) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: const Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onChanged: onSearchChanged,
+                  ),
+                ),
+                Expanded(
+                  child: (controller.wards.isNotEmpty)
+                      ? ListView.builder(
+                          controller: controller.wardsPickerScrollController,
+                          itemCount: controller.wards.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index < controller.wards.length) {
+                              final item = controller.wards[index];
+                              return ListTile(
+                                title: Text(item.name),
+                                onTap: () {
+                                  onItemSelected(item);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            } else if (controller.theresMoreWards.value) {
+                              return const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                        )
+                      : Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Tidak ada Kelurahan',
+                              style: CommonConstants.kNormalText.copyWith(
+                                color: ColorConstants.accentTextColor,
+                                fontSize: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
 
@@ -176,10 +589,10 @@ class FormDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataConfirmationController>(
-        id: CommonConstants.kDatePickerBuilder,
+        id: CommonConstants.kDatePickerBuilderId,
         builder: (getxController) {
           return GetBuilder<DataConfirmationController>(
-              id: CommonConstants.kDatePickerBuilder,
+              id: CommonConstants.kDatePickerBuilderId,
               builder: (getxController) {
                 return FormTextField(
                   label: label,

@@ -78,7 +78,7 @@ class DaftarDataScreen extends StatelessWidget {
                                   ),
                                   child: GestureDetector(
                                     onTap: () {
-                                      controller.navigateToDetailData(entry);
+                                      controller.navigateToDetailData(index);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(

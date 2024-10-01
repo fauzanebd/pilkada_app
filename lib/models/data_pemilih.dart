@@ -16,6 +16,9 @@ class DataPemilih {
   @JsonKey(name: 'city_code')
   String? cityCode;
 
+  @JsonKey(name: 'city_name')
+  String? cityName;
+
   @JsonKey(name: 'client_code')
   String? clientCode;
 
@@ -52,6 +55,9 @@ class DataPemilih {
   @JsonKey(name: 'province_code')
   String? provinceCode;
 
+  @JsonKey(name: 'province_name')
+  String? provinceName;
+
   @JsonKey(name: 'relation_to_candidate')
   String? relationToCandidate;
 
@@ -60,6 +66,9 @@ class DataPemilih {
 
   @JsonKey(name: 'subdistrict_code')
   String? subdistrictCode;
+
+  @JsonKey(name: 'subdistrict_name')
+  String? subdistrictName;
 
   @JsonKey(name: 'user_id')
   int? userId;
@@ -70,8 +79,14 @@ class DataPemilih {
   @JsonKey(name: 'village_code')
   String? villageCode;
 
+  @JsonKey(name: 'village_name')
+  String? villageName;
+
   @JsonKey(name: 'ward_code')
   String? wardCode;
+
+  @JsonKey(name: 'ward_name')
+  String? wardName;
 
   @JsonKey(name: 'created_at')
   String? createdAt;
@@ -84,6 +99,7 @@ class DataPemilih {
     this.birthDate,
     this.category,
     this.cityCode,
+    this.cityName,
     this.clientCode,
     this.confirmationStatus,
     this.expectationToCandidate,
@@ -96,9 +112,11 @@ class DataPemilih {
     this.noTps,
     this.positioningToCandidate,
     this.provinceCode,
+    this.provinceName,
     this.relationToCandidate,
     this.s3File,
     this.subdistrictCode,
+    this.subdistrictName,
     this.userId,
     this.villageCode,
     this.wardCode,

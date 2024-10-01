@@ -45,4 +45,20 @@ class ApiProvider extends BaseProvider {
   Future<Response> fetchAnggota(String path, String token) {
     return get(path, headers: {'Authorization': 'Bearer $token'});
   }
+
+  Future<Response> fetchCities(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> fetchProvinces(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> fetchSubdistricts(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> fetchWards(String path, String token) {
+    return get(path, headers: {'Authorization': 'Bearer $token'});
+  }
 }

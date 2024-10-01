@@ -129,11 +129,11 @@ class DaftarDataController extends GetxController {
     }
   }
 
-  Future<void> navigateToDetailData(DataPemilih dataPemilih) async {
+  Future<void> navigateToDetailData(int index) async {
     try {
       Get.toNamed(
         Routes.MAIN + Routes.DAFTAR_DATA + Routes.DETAIL_DATA,
-        arguments: DetailDataArgs(token, dataPemilih),
+        arguments: DetailDataArgs(token, dataPemilih[index]),
       );
     } catch (e) {
       CommonWidget.toast('Failed to navigate to detail data page: $e');

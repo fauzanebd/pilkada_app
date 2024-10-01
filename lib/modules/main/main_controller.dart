@@ -158,7 +158,7 @@ class MainController extends GetxController {
         croppedFile = await _cropImage(image);
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
-          EasyLoading.show(status: 'Uploading image...');
+          EasyLoading.show(status: 'Mengunggah gambar...');
           await _uploadImage(File(croppedFile.path));
           EasyLoading.dismiss();
         }
@@ -180,16 +180,15 @@ class MainController extends GetxController {
         if (croppedFile != null) {
           Navigator.of(Get.context!).pop();
           EasyLoading.show(
-              status: 'Uploading image...',
+              status: 'Mengunggah gambar...',
               maskType: EasyLoadingMaskType.black);
-          debugPrint('uploading image');
           await _uploadImage(File(croppedFile.path));
           EasyLoading.dismiss();
         }
       }
     } else {
       const SnackBar(
-          content: Text('App does not have permission to access gallery.'));
+          content: Text('Aplikasi tidak diizinkan mengakses galeri.'));
     }
   }
 
@@ -204,7 +203,8 @@ class MainController extends GetxController {
           child: Container(
             color: const Color.fromRGBO(0, 0, 0, 0.001),
             child: PickPhotoDialogContent(
-              isEnumerator: (currentUser != null && !(currentUser!.isEnumerator ?? false)),
+              isEnumerator: (currentUser != null &&
+                  !(currentUser!.isEnumerator ?? false)),
               onCancelDialog: () => Navigator.of(context).pop(),
               onTakePhoto: () async {
                 // Implement camera functionality here

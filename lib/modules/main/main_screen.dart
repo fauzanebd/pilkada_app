@@ -59,20 +59,23 @@ class MainScreen extends GetView<MainController> {
                   crossAxisCount: 3,
                   childAspectRatio: 1, // Ensures square cells
                   children: [
-                    _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
-                      controller.navigateToPage('Daftar Data');
-                    }),
-                    _buildMenuItem(Icons.emoji_events, 'Visi & Misi', onTap: () {
-                      controller.navigateToPage('Visi & Misi');
-                    }),
-                    if (controller.currentUser != null && !(controller.currentUser!.isEnumerator ?? false))
-                      _buildMenuItem(Icons.group, 'Anggota', onTap: () {
-                        controller.navigateToPage('Anggota');
-                      }),
                     _buildMenuItem(Icons.person, 'Profil', onTap: () {
                       controller.navigateToPage('Profil');
                     }),
-                    if (controller.currentUser != null && !(controller.currentUser!.isEnumerator ?? false))
+                    _buildMenuItem(Icons.emoji_events, 'Visi & Misi',
+                        onTap: () {
+                      controller.navigateToPage('Visi & Misi');
+                    }),
+                    if (controller.currentUser != null &&
+                        !(controller.currentUser!.isEnumerator ?? false))
+                      _buildMenuItem(Icons.group, 'Anggota', onTap: () {
+                        controller.navigateToPage('Anggota');
+                      }),
+                    _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
+                      controller.navigateToPage('Daftar Data');
+                    }),
+                    if (controller.currentUser != null &&
+                        !(controller.currentUser!.isEnumerator ?? false))
                       _buildMenuItem(Icons.people, 'DPT', onTap: () {
                         controller.navigateToPage('DPT');
                       }),
@@ -130,39 +133,39 @@ class MainScreen extends GetView<MainController> {
 
   Widget _buildCustomFAB(BuildContext context) {
     return SizedBox(
-            width: 70.w, // Increased size to accommodate shadow
-            height: 70.w, // Increased size to accommodate shadow
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  // Add functionality for the custom FAB
-                  controller.onAddDataTap();
-                },
-                customBorder: const CircleBorder(),
-                child: Ink(
-                  decoration: const BoxDecoration(
-                    color: ColorConstants.primaryAccentColor,
-                    shape: BoxShape.circle,
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.black.withOpacity(0.3),
-                    //     spreadRadius: 1,
-                    //     blurRadius: 5,
-                    //     offset: Offset(0, 2),
-                    //   ),
-                    // ],
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 30.w,
-                    ),
-                  ),
-                ),
+      width: 70.w, // Increased size to accommodate shadow
+      height: 70.w, // Increased size to accommodate shadow
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            // Add functionality for the custom FAB
+            controller.onAddDataTap();
+          },
+          customBorder: const CircleBorder(),
+          child: Ink(
+            decoration: const BoxDecoration(
+              color: ColorConstants.primaryAccentColor,
+              shape: BoxShape.circle,
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.black.withOpacity(0.3),
+              //     spreadRadius: 1,
+              //     blurRadius: 5,
+              //     offset: Offset(0, 2),
+              //   ),
+              // ],
+            ),
+            child: Center(
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+                size: 30.w,
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
