@@ -176,7 +176,7 @@ class DetailDataController extends GetxController {
         subdistrictCode: dataPemilih!.subdistrictCode!,
       );
     }
-    wardController.text = 'Pilih Kelurahan';
+    wardController.text = dataPemilih!.wardName ?? 'Pilih Kelurahan';
 
     provincesPickerScrollController.addListener(_provincesPickerScrollListener);
     citiesPickerScrollController.addListener(_citiesPickerScrollListener);
@@ -385,7 +385,8 @@ class DetailDataController extends GetxController {
 
   void showCitiesPicker() async {
     if (selectedProvince == null) {
-      CommonWidget.toast('Silahkan pilih Provinsi terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
       return;
     }
     await fetchCities('');
@@ -410,7 +411,8 @@ class DetailDataController extends GetxController {
 
   void showSubdistrictsPicker() async {
     if (selectedCity == null) {
-      CommonWidget.toast('Silahkan pilih Kota terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kota terlebih dahulu');
       return;
     }
     await fetchSubdistricts('');
@@ -433,7 +435,8 @@ class DetailDataController extends GetxController {
 
   void showWardsPicker() async {
     if (selectedSubdistrict == null) {
-      CommonWidget.toast('Silahkan pilih Kecamatan terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
       return;
     }
     await fetchWards('');
@@ -536,7 +539,7 @@ class DetailDataController extends GetxController {
       }
       update([CommonConstants.kProvincePickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch provinces: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch provinces: $e');
     } finally {
       isProvincesLoading.value = false;
       update([CommonConstants.kProvincePickerBuilderId]);
@@ -576,7 +579,7 @@ class DetailDataController extends GetxController {
       }
       update([CommonConstants.kCitiesPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch cities: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch cities: $e');
     } finally {
       isCitiesLoading.value = false;
       update([CommonConstants.kCitiesPickerBuilderId]);
@@ -617,7 +620,8 @@ class DetailDataController extends GetxController {
       }
       update([CommonConstants.kSubdistrictsPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch subdistricts: $e');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Failed to fetch subdistricts: $e');
     } finally {
       isSubdistrictsLoading.value = false;
       update([CommonConstants.kSubdistrictsPickerBuilderId]);
@@ -657,7 +661,7 @@ class DetailDataController extends GetxController {
       }
       update([CommonConstants.kWardsPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch wards: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch wards: $e');
     } finally {
       isWardsLoading.value = false;
       update([CommonConstants.kWardsPickerBuilderId]);

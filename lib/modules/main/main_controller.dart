@@ -141,7 +141,7 @@ class MainController extends GetxController {
       );
     } catch (e) {
       isUploadImageModalLoading.value = false;
-      CommonWidget.toast('Upload image failed: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Upload image failed: $e');
     }
   }
 

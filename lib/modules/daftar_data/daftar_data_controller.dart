@@ -116,7 +116,7 @@ class DaftarDataController extends GetxController {
         }
       }
     } catch (e) {
-      CommonWidget.toast('Gagal mengambil data: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Gagal mengambil data: $e');
     } finally {
       isLoading.value = false;
       update([CommonConstants.kDaftarDataBuilderId]);
@@ -143,7 +143,8 @@ class DaftarDataController extends GetxController {
         arguments: DetailDataArgs(token, dataPemilih[index]),
       );
     } catch (e) {
-      CommonWidget.toast('Failed to navigate to detail data page: $e');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Failed to navigate to detail data page: $e');
     }
   }
 
@@ -151,7 +152,8 @@ class DaftarDataController extends GetxController {
     EasyLoading.show(status: 'Menghapus data...');
     try {
       if (dataPemilih[indexOnScreen].id == null) {
-        CommonWidget.toast('Tidak dapat menghapus data: id tidak ditemukan');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Tidak dapat menghapus data: id tidak ditemukan');
         return;
       }
       final res = await apiRepository.deleteData(

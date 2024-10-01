@@ -16,7 +16,7 @@ abstract class CommonConstants {
   static const int kPromoDetailsTitleEstimatedHeightPerLine = 20;
   static const int kVoucherDetailsTitleEstimatedHeightPerLine = 20;
   static TextStyle kSnackbarText = TextStyle(
-    fontSize: 16.sp,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w600,
     fontFamily: 'Figtree',
     color: ColorConstants.white,

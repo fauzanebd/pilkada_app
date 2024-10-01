@@ -45,7 +45,7 @@ class VisiMisiController extends GetxController {
       }
     } catch (e) {
       debugPrint(e.toString());
-      CommonWidget.toast('Failed to get visi & misi');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to get visi & misi');
     }
   }
 }

@@ -76,7 +76,7 @@ class DaftarAnggotaController extends GetxController {
         }
       }
     } catch (e) {
-      CommonWidget.toast('Failed to fetch data: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch data: $e');
     } finally {
       isLoading.value = false;
       update([CommonConstants.kDaftarAnggotaBuilderId]);
@@ -90,7 +90,8 @@ class DaftarAnggotaController extends GetxController {
         arguments: DetailDataArgs(token, dataPemilih),
       );
     } catch (e) {
-      CommonWidget.toast('Failed to navigate to detail data page: $e');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Failed to navigate to detail data page: $e');
     }
   }
 

@@ -283,7 +283,8 @@ class DataConfirmationController extends GetxController {
         dataPemilih!.provinceCode = selectedProvince!.code;
         dataPemilih!.provinceName = selectedProvince!.name;
       } else {
-        CommonWidget.toast('Silahkan pilih Provinsi terlebih dahulu');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
         return;
       }
 
@@ -291,7 +292,8 @@ class DataConfirmationController extends GetxController {
         dataPemilih!.cityCode = selectedCity!.code;
         dataPemilih!.cityName = selectedCity!.name;
       } else {
-        CommonWidget.toast('Silahkan pilih Kota terlebih dahulu');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kota terlebih dahulu');
         return;
       }
 
@@ -299,7 +301,8 @@ class DataConfirmationController extends GetxController {
         dataPemilih!.subdistrictCode = selectedSubdistrict!.code;
         dataPemilih!.subdistrictName = selectedSubdistrict!.name;
       } else {
-        CommonWidget.toast('Silahkan pilih Kecamatan terlebih dahulu');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
         return;
       }
 
@@ -307,7 +310,8 @@ class DataConfirmationController extends GetxController {
         dataPemilih!.wardCode = selectedWard!.code;
         dataPemilih!.wardName = selectedWard!.name;
       } else {
-        CommonWidget.toast('Silahkan pilih Kelurahan terlebih dahulu');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Silahkan pilih Kelurahan terlebih dahulu');
         return;
       }
 
@@ -398,7 +402,8 @@ class DataConfirmationController extends GetxController {
 
   void showCitiesPicker() async {
     if (selectedProvince == null) {
-      CommonWidget.toast('Silahkan pilih Provinsi terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Provinsi terlebih dahulu');
       return;
     }
     await fetchCities('');
@@ -423,7 +428,8 @@ class DataConfirmationController extends GetxController {
 
   void showSubdistrictsPicker() async {
     if (selectedCity == null) {
-      CommonWidget.toast('Silahkan pilih Kota terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kota terlebih dahulu');
       return;
     }
     await fetchSubdistricts('');
@@ -446,7 +452,8 @@ class DataConfirmationController extends GetxController {
 
   void showWardsPicker() async {
     if (selectedSubdistrict == null) {
-      CommonWidget.toast('Silahkan pilih Kecamatan terlebih dahulu');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Silahkan pilih Kecamatan terlebih dahulu');
       return;
     }
     await fetchWards('');
@@ -549,7 +556,7 @@ class DataConfirmationController extends GetxController {
       }
       update([CommonConstants.kProvincePickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch provinces: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch provinces: $e');
     } finally {
       isProvincesLoading.value = false;
       update([CommonConstants.kProvincePickerBuilderId]);
@@ -589,7 +596,7 @@ class DataConfirmationController extends GetxController {
       }
       update([CommonConstants.kCitiesPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch cities: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch cities: $e');
     } finally {
       isCitiesLoading.value = false;
       update([CommonConstants.kCitiesPickerBuilderId]);
@@ -630,7 +637,8 @@ class DataConfirmationController extends GetxController {
       }
       update([CommonConstants.kSubdistrictsPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch subdistricts: $e');
+      CommonWidget.errorSnackbar(
+          Get.context!, 'Failed to fetch subdistricts: $e');
     } finally {
       isSubdistrictsLoading.value = false;
       update([CommonConstants.kSubdistrictsPickerBuilderId]);
@@ -670,7 +678,7 @@ class DataConfirmationController extends GetxController {
       }
       update([CommonConstants.kWardsPickerBuilderId]);
     } catch (e) {
-      CommonWidget.toast('Failed to fetch wards: $e');
+      CommonWidget.errorSnackbar(Get.context!, 'Failed to fetch wards: $e');
     } finally {
       isWardsLoading.value = false;
       update([CommonConstants.kWardsPickerBuilderId]);

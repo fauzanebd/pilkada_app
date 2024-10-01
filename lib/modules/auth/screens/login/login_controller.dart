@@ -87,22 +87,26 @@ class LoginController extends GetxController {
         } else {
           // this is awkward
           dismissLoginLoading();
-          CommonWidget.toast('Unknown Error');
+          CommonWidget.errorSnackbar(Get.context!, 'Unknown Error');
         }
       } on UnauthorizedException {
         dismissLoginLoading();
-        CommonWidget.toast('Username atau password salah');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Username atau password salah');
       } on NotFoundException {
-        CommonWidget.toast('Username atau password salah');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Username atau password salah');
       } on NetworkException {
         dismissLoginLoading();
-        CommonWidget.toast('Gagal login. coba periksa jaringan anda');
+        CommonWidget.errorSnackbar(
+            Get.context!, 'Gagal login. coba periksa jaringan anda');
       } on LoginException catch (e) {
         dismissLoginLoading();
-        CommonWidget.toast('${'Gagal login'}: ${e.message}');
+        CommonWidget.errorSnackbar(
+            Get.context!, '${'Gagal login'}: ${e.message}');
       } catch (e) {
         dismissLoginLoading();
-        CommonWidget.toast('${'Gagal login'}: $e');
+        CommonWidget.errorSnackbar(Get.context!, '${'Gagal login'}: $e');
       }
     }
   }

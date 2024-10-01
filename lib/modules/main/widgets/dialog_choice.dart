@@ -25,7 +25,7 @@ class DialogChoice extends StatelessWidget {
         onTap: onChoiceTap,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            vertical: 15.h,
+            vertical: 18.h,
             horizontal: CommonConstants.kDefaultHorizontalPadding.w,
           ),
           child: SizedBox(
