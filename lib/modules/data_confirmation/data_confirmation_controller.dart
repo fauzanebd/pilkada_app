@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pilkada_app/api/api_repository.dart';
 import 'package:pilkada_app/models/city.dart';
@@ -18,7 +16,6 @@ import 'package:pilkada_app/models/response/upload_image_response.dart';
 import 'package:pilkada_app/models/subdistrict.dart';
 import 'package:pilkada_app/models/ward.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.dart';
-import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
 import 'package:pilkada_app/shared/utils/exceptions.dart';

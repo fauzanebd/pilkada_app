@@ -39,11 +39,9 @@ class VisiMisiController extends GetxController {
         token,
         clientCode: dotenv.get('CLIENT_CODE'),
       );
-      if (res != null) {
-        visiMisi = res.data;
-        update([CommonConstants.kVisiMisiBuilderId]);
-      }
-    } catch (e) {
+      visiMisi = res.data;
+      update([CommonConstants.kVisiMisiBuilderId]);
+        } catch (e) {
       debugPrint(e.toString());
       CommonWidget.errorSnackbar(Get.context!, 'Failed to get visi & misi');
     }

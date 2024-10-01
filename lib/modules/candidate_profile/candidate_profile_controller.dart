@@ -36,11 +36,9 @@ class CandidateProfileController extends GetxController {
     CandidateProfileResponse? res;
     try {
       res = await apiRepository.getCandidateProfile(token, clientCode: dotenv.get('CLIENT_CODE'));
-      if (res != null) {
-        candidateProfile = res.data;
-        update([CommonConstants.kCandidateProfileBuilderId]);
-      }
-    } catch (e) {
+      candidateProfile = res.data;
+      update([CommonConstants.kCandidateProfileBuilderId]);
+        } catch (e) {
       debugPrint(e.toString());
       CommonWidget.errorSnackbar(Get.context!, 'Failed to get visi & misi');
     }

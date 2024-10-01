@@ -127,6 +127,7 @@ class ApiRepository {
       default:
         throw Exception(ErrorResponse.fromJson(res.body).message);
     }
+    return null;
   }
 
   Future<String?> updateData(DataPemilih data, String token,

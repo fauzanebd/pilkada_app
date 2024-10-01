@@ -99,11 +99,11 @@ class AuthInputFieldWithNoLabel extends StatelessWidget {
         suffixIcon: password
             ? InkWell(
                 splashFactory: NoSplash.splashFactory,
+                onTap: onPasswordEyePressed,
                 child: const Icon(
                   Icons.remove_red_eye,
                   color: ColorConstants.primaryAccentColor,
                 ),
-                onTap: onPasswordEyePressed,
               )
             : null,
       ),
