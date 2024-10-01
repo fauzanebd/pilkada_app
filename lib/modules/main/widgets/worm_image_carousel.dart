@@ -39,6 +39,12 @@ class WormImageCarousel extends StatelessWidget {
                 height: 180.h,
                 child: Swiper(
                   itemBuilder: (context, index) {
+                    if (carouselItems[index].isPng) {
+                      return Image.asset(
+                        carouselItems[index].image!,
+                        fit: BoxFit.fill,
+                      );
+                    }
                     try {
                       return CachedNetworkImage(
                         key: ValueKey(carouselItems[index].image!),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -29,12 +30,17 @@ class MainScreen extends GetView<MainController> {
                 horizontal: CommonConstants.kDefaultHorizontalPadding.w,
                 vertical: 10.w,
               ),
-              child: SizedBox(
-                width: 40.w,
-                height: 40.w,
-                child: Image.asset(
-                  'assets/pngs/smartsoft-logo.png',
-                  fit: BoxFit.contain,
+              child: GestureDetector(
+                onTap: () {
+                  controller.launchURL("https://smartsoft.co.id/");
+                },
+                child: SizedBox(
+                  width: 100.w,
+                  height: 50.w,
+                  child: Image.asset(
+                    'assets/pngs/smartsoft-logo-bgless.png',
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
             ),
@@ -43,7 +49,7 @@ class MainScreen extends GetView<MainController> {
               builder: (ctrl) {
                 return WormImageCarousel(
                   carouselItems: ctrl.carouselItems.value,
-                  isSkeletonEnabled: ctrl.carouselItemsLoading.value,
+                  isSkeletonEnabled: false,
                   controller: controller,
                   autoPlayDelay: controller.appConf.sliderInterval,
                 );
@@ -76,7 +82,8 @@ class MainScreen extends GetView<MainController> {
                     }),
                     if (controller.currentUser != null &&
                         !(controller.currentUser!.isEnumerator ?? false))
-                      _buildMenuItem(Icons.people, 'DPT', onTap: () {
+                      _buildMenuItem(CupertinoIcons.person_3_fill, 'DPT',
+                          onTap: () {
                         controller.navigateToPage('DPT');
                       }),
                     _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {

@@ -20,6 +20,7 @@ import 'package:pilkada_app/routes/app_pages.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/utils/auth.dart';
 import 'package:pilkada_app/shared/utils/common_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/response/appconf_response.dart';
 
@@ -38,15 +39,29 @@ class MainController extends GetxController {
 
   final RxInt activeCarouselIndex = 0.obs;
 
-  final RxList<CarouselItem> carouselItems = List.generate(
-    4,
-    (index) => CarouselItem(
-      bannerId: index,
-      image: CommonConstants.imageNetworkPlaceholder,
+  final RxList<CarouselItem> carouselItems = [
+    CarouselItem(
+      bannerId: 1,
+      image: 'assets/pngs/slider1.png',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      isPng: true,
     ),
-  ).obs;
+    CarouselItem(
+      bannerId: 1,
+      image: 'assets/pngs/slider2.png',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      isPng: true,
+    ),
+    CarouselItem(
+      bannerId: 1,
+      image: 'assets/pngs/slider3.png',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      isPng: true,
+    ),
+  ].obs;
   final RxBool carouselItemsLoading = true.obs;
 
   UploadImageResponse? uploadImageResponse;
@@ -142,6 +157,13 @@ class MainController extends GetxController {
     } catch (e) {
       isUploadImageModalLoading.value = false;
       CommonWidget.errorSnackbar(Get.context!, 'Upload image failed: $e');
+    }
+  }
+
+  void launchURL(String url) async {
+    Uri u = Uri.parse(url);
+    if (!await launchUrl(u)) {
+      throw Exception('Could not launch $url');
     }
   }
 

@@ -30,7 +30,7 @@ class AuthScreen extends GetView<AuthController> {
                     width: 210.w,
                     height: 210.w,
                     child: Image.asset(
-                      'assets/pngs/smartsoft-logo.png',
+                      'assets/pngs/gatepic.png',
                       fit: BoxFit.contain,
                     ),
                     // child: SvgPicture.asset(

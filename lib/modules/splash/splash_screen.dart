@@ -22,7 +22,7 @@ class SplashScreen extends StatelessWidget {
                   width: 220.w,
                   height: 220.w,
                   child: Image.asset(
-                    'assets/pngs/smartsoft-logo.png',
+                    'assets/pngs/gatepic.png',
                     fit: BoxFit.contain,
                   ),
                 ),

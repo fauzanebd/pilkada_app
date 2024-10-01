@@ -33,11 +33,11 @@ class LoginScreen extends GetView<LoginController> {
                     flex: 3,
                     child: Center(
                       child: SizedBox(
-                        width: 142.w,
-                        height: 142.w,
+                        width: 180.w,
+                        height: 280.w,
                         child: Image.asset(
-                          'assets/pngs/smartsoft-logo.png',
-                          fit: BoxFit.contain,
+                          'assets/pngs/gatepic.png',
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
                     ),

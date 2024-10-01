@@ -1,11 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pilkada_app/models/data_pemilih.dart';
+import 'package:pilkada_app/models/response/dpt_check_response.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
 import 'package:pilkada_app/shared/constants/common.dart';
 import 'package:pilkada_app/shared/screens/custom_pop_screen.dart';
+import 'package:pilkada_app/shared/utils/common_widget.dart';
 import 'package:pilkada_app/shared/widgets/big_primary_button.dart';
 import 'package:pilkada_app/shared/widgets/form_boolean_dropdown.dart';
 import 'package:pilkada_app/shared/widgets/form_dropdown.dart';
@@ -167,10 +171,19 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
                 child: Padding(
                   padding: EdgeInsets.all(16.w),
                   child: BigPrimaryButton(
-                    'Simpan Data',
+                    'Cek DPT',
                     isLoading: false,
                     height: 50.0.h,
-                    onTap: controller.saveData,
+                    // onTap: controller.saveData,
+                    onTap: () async {
+                      final res = await controller.checkDPT();
+                      if (res != null) {
+                        showDPTConfirmation(context, controller, res);
+                      } else {
+                        CommonWidget.errorSnackbar(
+                            Get.context!, 'Gagal cek DPT');
+                      }
+                    },
                   ),
                 ),
               ),
@@ -178,6 +191,81 @@ class DataConfirmationScreen extends GetView<DataConfirmationController> {
           ),
         ],
       ),
+    );
+  }
+
+  void showDPTConfirmation(
+    BuildContext context,
+    DataConfirmationController controller,
+    DPTCheckResponse dptCheckRes,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: ColorConstants.appScaffoldBackgroundColor,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Konfirmasi DPT',
+                style: CommonConstants.kNormalText.copyWith(
+                  color: ColorConstants.accentTextColor,
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: SizedBox(
+                  child: Icon(
+                    CupertinoIcons.xmark,
+                    size: 20.sp,
+                    color: ColorConstants.primaryAccentColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            dptCheckRes.isValidDpt
+                ? 'Data ${controller.nameController.text} valid terdaftar di DPT'
+                : 'Data ${controller.nameController.text} tidak valid terdaftar di DPT.\nTetap simpan data?',
+            style: CommonConstants.kNormalText.copyWith(
+              color: ColorConstants.black,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: ColorConstants.red),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Batal simpan data',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstants.primaryAccentColor),
+              onPressed: () {
+                controller.saveData();
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Ya, tetap simpan data',
+                style: TextStyle(
+                  color: ColorConstants.white,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -393,85 +481,85 @@ class SubdistrictPickerBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DataConfirmationController>(
-        id: CommonConstants.kSubdistrictsPickerBuilderId,
-        builder: (controller) {
-          return Container(
-            height: MediaQuery.of(context).size.height * 0.50,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(16.w),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+      id: CommonConstants.kSubdistrictsPickerBuilderId,
+      builder: (controller) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.50,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
-                    onChanged: onSearchChanged,
                   ),
+                  onChanged: onSearchChanged,
                 ),
-                Expanded(
-                  child: (controller.subdistricts.isNotEmpty)
-                      ? ListView.builder(
-                          controller:
-                              controller.subdistrictsPickerScrollController,
-                          itemCount: controller.subdistricts.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index < controller.subdistricts.length) {
-                              final item = controller.subdistricts[index];
-                              return ListTile(
-                                title: Text(item.name),
-                                onTap: () {
-                                  onItemSelected(item);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            } else if (controller
-                                .theresMoreSubdistricts.value) {
-                              return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        )
-                      : Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Tidak ada Kecamatan',
-                              style: CommonConstants.kNormalText.copyWith(
-                                color: ColorConstants.accentTextColor,
-                                fontSize: 20.sp,
+              ),
+              Expanded(
+                child: (controller.subdistricts.isNotEmpty)
+                    ? ListView.builder(
+                        controller:
+                            controller.subdistrictsPickerScrollController,
+                        itemCount: controller.subdistricts.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index < controller.subdistricts.length) {
+                            final item = controller.subdistricts[index];
+                            return ListTile(
+                              title: Text(item.name),
+                              onTap: () {
+                                onItemSelected(item);
+                                Navigator.pop(context);
+                              },
+                            );
+                          } else if (controller.theresMoreSubdistricts.value) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
                               ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      )
+                    : Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Tidak ada Kecamatan',
+                            style: CommonConstants.kNormalText.copyWith(
+                              color: ColorConstants.accentTextColor,
+                              fontSize: 20.sp,
                             ),
                           ),
                         ),
-                ),
-              ],
-            ),
-          );
-        });
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

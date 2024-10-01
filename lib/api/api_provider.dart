@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
+import 'package:pilkada_app/models/request/dpt_check_request.dart';
 import 'package:pilkada_app/models/request/login_request.dart';
 import 'api.dart';
 
@@ -24,6 +25,15 @@ class ApiProvider extends BaseProvider {
     return post(path, formData, headers: {'Authorization': 'Bearer $token'});
   }
 
+  Future<Response> checkDpt({
+    required String path,
+    required DPTCheckRequest data,
+    required String token,
+  }) {
+    return post(path, data.toJson(),
+        headers: {'Authorization': 'Bearer $token'});
+  }
+
   Future<Response> saveData(String path, DataPemilih data, String token) {
     return post(path, data.toJson(),
         headers: {'Authorization': 'Bearer $token'});
@@ -35,8 +45,7 @@ class ApiProvider extends BaseProvider {
   }
 
   Future<Response> deleteData(String path, String token) {
-    return delete(path ,
-        headers: {'Authorization': 'Bearer $token'});
+    return delete(path, headers: {'Authorization': 'Bearer $token'});
   }
 
   Future<Response> getVisiMisi(String path, String token) {

@@ -4,12 +4,14 @@ class CarouselItem {
     required this.image,
     required this.createdAt,
     required this.updatedAt,
+    this.isPng = false,
   });
 
   final int? bannerId;
   final String? image;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final bool isPng;
 
   factory CarouselItem.fromJson(Map<String, dynamic> json) {
     return CarouselItem(

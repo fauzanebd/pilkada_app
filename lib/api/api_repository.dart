@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:pilkada_app/models/data_pemilih.dart';
+import 'package:pilkada_app/models/request/dpt_check_request.dart';
 import 'package:pilkada_app/models/request/login_request.dart';
 import 'package:pilkada_app/models/response/daftar_data_pemilih_response.dart';
 import 'package:pilkada_app/models/response/delete_data_response.dart';
+import 'package:pilkada_app/models/response/dpt_check_response.dart';
 import 'package:pilkada_app/models/response/error_response.dart';
 import 'package:pilkada_app/models/response/list_anggota_response.dart';
 import 'package:pilkada_app/models/response/list_cities_response.dart';
@@ -53,6 +55,27 @@ class ApiRepository {
             responseStatusErrorText: res.statusText);
       case 400:
         throw LoginException(ErrorResponse.fromJson(res.body).message);
+      default:
+        throw Exception(ErrorResponse.fromJson(res.body).message);
+    }
+  }
+
+  Future<DPTCheckResponse?> checkDPT({
+    required DPTCheckRequest data,
+    required String token,
+  }) async {
+    final res = await apiProvider.checkDpt(
+      path: '/data-pemilih/check_dpt',
+      data: data,
+      token: token,
+    );
+    switch (res.statusCode) {
+      case 200:
+        return DPTCheckResponse.fromJson(res.body);
+      case null: //null statusCode happen when theres no internet connection
+        throw NetworkException(
+            'Connection timed out. Check your internet connection',
+            responseStatusErrorText: res.statusText);
       default:
         throw Exception(ErrorResponse.fromJson(res.body).message);
     }
