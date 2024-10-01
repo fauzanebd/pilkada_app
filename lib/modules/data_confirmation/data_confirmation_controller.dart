@@ -260,7 +260,7 @@ class DataConfirmationController extends GetxController {
   }
 
   Future<DPTCheckResponse?> checkDPT() async {
-    EasyLoading.show(status: 'Mengecek DPT...');
+    EasyLoading.show(status: 'Menjalankan verifikasi DPT...');
     try {
       if (selectedProvince != null) {
         dataPemilih!.provinceCode = selectedProvince!.code;
