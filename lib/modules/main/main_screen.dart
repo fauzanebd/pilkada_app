@@ -81,12 +81,10 @@ class MainScreen extends GetView<MainController> {
                     _buildMenuItem(Icons.list_alt, 'Daftar Data', onTap: () {
                       controller.navigateToPage('Daftar Data');
                     }),
-                    if (controller.currentUser != null &&
-                        !(controller.currentUser!.isEnumerator ?? false))
-                      _buildMenuItem(CupertinoIcons.person_3_fill, 'DPT',
-                          onTap: () {
-                        controller.navigateToPage('DPT');
-                      }),
+                    _buildMenuItem(CupertinoIcons.person_3_fill, 'DPT',
+                        onTap: () {
+                      controller.navigateToPage('DPT');
+                    }),
                     _buildMenuItem(Icons.exit_to_app, 'Keluar', onTap: () {
                       controller.navigateToPage('Keluar');
                     }),
