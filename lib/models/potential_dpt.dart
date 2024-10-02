@@ -55,6 +55,9 @@ class PotentialDpt {
   @JsonKey(name: 'ward_code')
   String? wardCode;
 
+  @JsonKey(name: 'ward_name')
+  String? wardName;
+
   PotentialDpt({
     this.address,
     this.age,

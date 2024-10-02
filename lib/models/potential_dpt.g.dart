@@ -24,7 +24,7 @@ PotentialDpt _$PotentialDptFromJson(Map<String, dynamic> json) => PotentialDpt(
       tpsNo: json['tps_no'] as String?,
       villageCode: json['village_code'] as String?,
       wardCode: json['ward_code'] as String?,
-    );
+    )..wardName = json['ward_name'] as String?;
 
 Map<String, dynamic> _$PotentialDptToJson(PotentialDpt instance) =>
     <String, dynamic>{
@@ -45,4 +45,5 @@ Map<String, dynamic> _$PotentialDptToJson(PotentialDpt instance) =>
       'tps_no': instance.tpsNo,
       'village_code': instance.villageCode,
       'ward_code': instance.wardCode,
+      'ward_name': instance.wardName,
     };

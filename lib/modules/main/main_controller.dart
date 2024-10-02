@@ -324,6 +324,10 @@ class MainController extends GetxController {
         break;
       case 'DPT':
         // Navigate to DPT page
+        Get.toNamed(
+          Routes.MAIN + Routes.DPT,
+          arguments: token!,
+        );
         break;
       case 'Keluar':
         // Implement logout functionality

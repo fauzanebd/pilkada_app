@@ -13,6 +13,7 @@ abstract class Routes {
   static const PROFILE = '/profile';
   static const IMAGE_VIEWER = '/image-viewer';
   static const PROFIL_CALON = '/candidate-profile';
+  static const DPT = '/dpt';
 
   static const SPLASH = '/';
 

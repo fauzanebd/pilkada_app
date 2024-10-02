@@ -180,6 +180,8 @@ abstract class CommonConstants {
   static const String kVisiMisiBuilderId = 'VisiMisiBuilderId';
   
   static const String kCandidateProfileBuilderId = 'CandidateProfileBuilderId';
+
+  static const String kDPTBuilderId = 'DPTBuilderId';
 }
 
 extension Target on Object {

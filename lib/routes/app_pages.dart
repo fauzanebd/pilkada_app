@@ -12,6 +12,8 @@ import 'package:pilkada_app/modules/daftar_data/daftar_data_screen.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_binding.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_screen.dart';
 import 'package:pilkada_app/modules/detail_data/detail_data_binding.dart';
+import 'package:pilkada_app/modules/dpt/dpt_binding.dart';
+import 'package:pilkada_app/modules/dpt/dpt_screen.dart';
 import 'package:pilkada_app/modules/image_viewer/image_viewer_binding.dart';
 import 'package:pilkada_app/modules/image_viewer/image_viewer_screen.dart';
 import 'package:pilkada_app/modules/main/main.dart';
@@ -82,6 +84,12 @@ class AppPages {
           name: Routes.VISI_MISI,
           page: () => const VisiMisiScreen(),
           binding: VisiMisiBinding(),
+          transition: Transition.cupertinoDialog,
+        ),
+        GetPage(
+          name: Routes.DPT,
+          page: () => const DPTScreen(),
+          binding: DPTBinding(),
           transition: Transition.cupertinoDialog,
         ),
         GetPage(
