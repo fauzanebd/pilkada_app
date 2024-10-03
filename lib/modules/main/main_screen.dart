@@ -44,6 +44,34 @@ class MainScreen extends GetView<MainController> {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: CommonConstants.kDefaultHorizontalPadding.w,
+                vertical: 10.w,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${controller.currentUser?.clientName ?? ''}',
+                    style: CommonConstants.kNormalText.copyWith(
+                      fontSize: 16.sp,
+                      color: ColorConstants.accentTextColor,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => {
+                      controller.navigateToPage('Profil'),
+                    },
+                    child: Icon(
+                      Icons.person,
+                      color: ColorConstants.accentTextColor,
+                      size: 40.w,
+                    ),
+                  )
+                ],
+              ),
+            ),
             GetBuilder<MainController>(
               id: CommonConstants.kImageCarouselBuilderId,
               builder: (ctrl) {

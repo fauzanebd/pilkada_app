@@ -16,6 +16,7 @@ import 'package:pilkada_app/models/user.dart';
 import 'package:pilkada_app/modules/candidate_profile/candidate_profile_controller.dart';
 import 'package:pilkada_app/modules/data_confirmation/data_confirmation_controller.dart';
 import 'package:pilkada_app/modules/main/widgets/pick_photo_dialog_content.dart';
+import 'package:pilkada_app/modules/profile/profile_controller.dart';
 import 'package:pilkada_app/modules/visi_misi/visi_misi_controller.dart';
 import 'package:pilkada_app/routes/app_pages.dart';
 import 'package:pilkada_app/shared/constants/colors.dart';
@@ -320,6 +321,13 @@ class MainController extends GetxController {
         Get.toNamed(
           Routes.MAIN + Routes.PROFIL_CALON,
           arguments: CandidateProfileArgs(token!),
+        );
+        break;
+      case 'Profil':
+        // Navigate to Profil page
+        Get.toNamed(
+          Routes.MAIN + Routes.PROFILE,
+          arguments: ProfileArgs(token: token!, user: currentUser!),
         );
         break;
       case 'DPT':

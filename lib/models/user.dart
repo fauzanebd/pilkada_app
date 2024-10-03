@@ -10,12 +10,18 @@ part 'user.g.dart';
 class User {
   @JsonKey(name: 'avatar')
   String? avatar;
-
+  
   @JsonKey(name: 'city_code')
   String? cityCode;
 
+  @JsonKey(name: 'city_name')
+  String? cityName;
+
   @JsonKey(name: 'client_code')
   String? clientCode;
+
+  @JsonKey(name: 'client_name')
+  String? clientName;
 
   @JsonKey(name: 'created_at')
   String? createdAt;
@@ -47,11 +53,17 @@ class User {
   @JsonKey(name: 'province_code')
   String? provinceCode;
 
+  @JsonKey(name: 'province_name')
+  String? provinceName;
+
   @JsonKey(name: 'role')
   String? role;
 
   @JsonKey(name: 'subdistrict_code')
   String? subdistrictCode;
+
+  @JsonKey(name: 'subdistrict_name')
+  String? subdistrictName;
 
   @JsonKey(name: 'updated_at')
   String? updatedAt;
@@ -64,6 +76,12 @@ class User {
 
   @JsonKey(name: 'ward_code')
   String? wardCode;
+
+  @JsonKey(name: 'ward_name')
+  String? wardName;
+
+  @JsonKey(name: 'tps_no')
+  String? tpsNo;
 
   User({
     this.avatar,

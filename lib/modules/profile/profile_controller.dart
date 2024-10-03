@@ -27,6 +27,9 @@ class ProfileController extends GetxController {
   final editNomorHPController = TextEditingController();
   final editProvinsiController = TextEditingController();
   final editKotaController = TextEditingController();
+  final editKecamatanController = TextEditingController();
+  final editKelurahanController = TextEditingController();
+  final editTPSController = TextEditingController();
 
   final RxBool isEditProfileLoading = false.obs;
 
@@ -48,8 +51,11 @@ class ProfileController extends GetxController {
 
     editUserNameController.text = editProfileArgs.user.username ?? '';
     editNomorHPController.text = editProfileArgs.user.noPhone ?? '';
-    editProvinsiController.text = editProfileArgs.user.provinceCode ?? '';
-    editKotaController.text = editProfileArgs.user.cityCode ?? '';
+    editProvinsiController.text = editProfileArgs.user.provinceName ?? '';
+    editKotaController.text = editProfileArgs.user.cityName ?? '';
+    editKecamatanController.text = editProfileArgs.user.subdistrictName ?? '';
+    editKelurahanController.text = editProfileArgs.user.wardName ?? '';
+    editTPSController.text = editProfileArgs.user.tpsNo ?? '';
   }
 
   Future<bool> _cameraAccessAllowed() async {

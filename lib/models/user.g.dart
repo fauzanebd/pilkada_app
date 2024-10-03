@@ -28,12 +28,20 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       username: json['username'] as String?,
       villageCode: json['village_code'] as String?,
       wardCode: json['ward_code'] as String?,
-    );
+    )
+      ..cityName = json['city_name'] as String?
+      ..clientName = json['client_name'] as String?
+      ..provinceName = json['province_name'] as String?
+      ..subdistrictName = json['subdistrict_name'] as String?
+      ..wardName = json['ward_name'] as String?
+      ..tpsNo = json['tps_no'] as String?;
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'avatar': instance.avatar,
       'city_code': instance.cityCode,
+      'city_name': instance.cityName,
       'client_code': instance.clientCode,
+      'client_name': instance.clientName,
       'created_at': instance.createdAt,
       'hierarchy': instance.hierarchy,
       'hierarchy_value': instance.hierarchyValue,
@@ -44,10 +52,14 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'nasional': instance.nasional,
       'no_phone': instance.noPhone,
       'province_code': instance.provinceCode,
+      'province_name': instance.provinceName,
       'role': instance.role,
       'subdistrict_code': instance.subdistrictCode,
+      'subdistrict_name': instance.subdistrictName,
       'updated_at': instance.updatedAt,
       'username': instance.username,
       'village_code': instance.villageCode,
       'ward_code': instance.wardCode,
+      'ward_name': instance.wardName,
+      'tps_no': instance.tpsNo,
     };

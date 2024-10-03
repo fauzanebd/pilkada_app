@@ -66,6 +66,21 @@ class ProfileScreen extends GetView<ProfileController> {
                       labelText: 'Kota',
                       readOnly: true,
                     ),
+                    InputFieldWithTopLeftLabel(
+                      textEditingController: controller.editKecamatanController,
+                      labelText: 'Kecamatan',
+                      readOnly: true,
+                    ),
+                    InputFieldWithTopLeftLabel(
+                      textEditingController: controller.editKelurahanController,
+                      labelText: 'Kelurahan',
+                      readOnly: true,
+                    ),
+                    InputFieldWithTopLeftLabel(
+                      textEditingController: controller.editTPSController,
+                      labelText: 'No TPS',
+                      readOnly: true,
+                    ),
                     SizedBox(height: 30.h),
                   ],
                 ),
