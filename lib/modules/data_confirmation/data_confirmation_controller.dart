@@ -495,7 +495,14 @@ class DataConfirmationController extends GetxController {
       builder: (context) => ProvincePickerBottomSheet(
         title: 'Provinsi',
         onItemSelected: (item) {
+          var aboutToRefreshCities = false;
+          if (selectedProvince != item && selectedProvince != null) {
+            aboutToRefreshCities = true;
+          }
           selectedProvince = item;
+          if (aboutToRefreshCities) {
+            refreshCities('');
+          }
           provinceController.text = item.name;
           refreshProvinces('', refetch: false);
           // Clear city, subdistrict, and ward when province is changed
@@ -523,7 +530,14 @@ class DataConfirmationController extends GetxController {
       builder: (context) => CitiesPickerBottomSheet(
         title: 'Kota',
         onItemSelected: (item) {
+          var aboutToRefreshSubdistricts = false;
+          if (selectedCity != item && selectedCity != null) {
+            aboutToRefreshSubdistricts = true;
+          }
           selectedCity = item;
+          if (aboutToRefreshSubdistricts) {
+            refreshSubdistricts('');
+          }
           cityController.text = item.name;
           refreshCities('', refetch: false);
           // Clear subdistrict and ward when city is changed
@@ -549,7 +563,15 @@ class DataConfirmationController extends GetxController {
       builder: (context) => SubdistrictPickerBottomSheet(
         title: 'Kecamatan',
         onItemSelected: (item) {
+          var aboutToRefreshWards = false;
+          if (selectedSubdistrict != item && selectedSubdistrict != null) {
+            aboutToRefreshWards = true;
+          }
           selectedSubdistrict = item;
+          if (aboutToRefreshWards) {
+            refreshWards('');
+          }
+
           subdistrictController.text = item.name;
           refreshSubdistricts('', refetch: false);
           // Clear ward when subdistrict is changed
